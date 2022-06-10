@@ -1,7 +1,12 @@
-﻿namespace WorldManager.ViewModels
+﻿using System;
+using ReactiveUI;
+
+namespace WorldManager.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting => "Welcome to Avalonia!";
+        private AuthViewModel _authViewModel = new();
+
+        public AuthViewModel AuthViewModel => _authViewModel;
     }
 }

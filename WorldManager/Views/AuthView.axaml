@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
+             x:Class="WorldManager.Views.AuthView">
+    
+    <Design.DataContext>
+        <viewModels:AuthViewModel/>
+    </Design.DataContext>
+    
+    <StackPanel>
+        <TextBlock>Username</TextBlock>
+        <TextBox Margin="0, 0, 0, 10" Text="{Binding Username}"></TextBox>
+        
+        <TextBlock>Password</TextBlock>
+        <TextBox Margin="0, 0, 0, 10" PasswordChar="*" Text="{Binding Password}"></TextBox>
+        
+        <TextBlock IsVisible="{Binding !!ErrorString}"
+                   Margin="0, 0, 0, 10"
+                   Foreground="Red"
+                   Text="{Binding ErrorString}"
+                   ToolTip.Tip="{Binding ErrorString}"></TextBlock>
+        
+        <Button Width="{Binding $parent[0].Bounds.Width}"
+                HorizontalContentAlignment="Center"
+                Command="{Binding Enter}">Enter</Button>
+    </StackPanel>
+</UserControl>
