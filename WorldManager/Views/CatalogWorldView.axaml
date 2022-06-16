@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WorldManager.Views.CatalogWorldView">
+    
+    <Design.DataContext>
+        <viewModels:CatalogWorldViewModel />
+    </Design.DataContext>
+    
+    <StackPanel Orientation="Horizontal" Width="600">
+        <Image Height="128" Source="{Binding Thumbnail}" />
+        <StackPanel Margin="10,0">
+            <TextBlock FontSize="20" FontWeight="Bold"
+                       Text="{Binding World.Name}"></TextBlock>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Дата публикации:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding PublicationDateFormat}"></TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

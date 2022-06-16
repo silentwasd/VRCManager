@@ -26,5 +26,7 @@
         <Button Width="{Binding $parent[0].Bounds.Width}"
                 HorizontalContentAlignment="Center"
                 Command="{Binding Enter}">Enter</Button>
+        
+        <Button Command="{Binding Test}">Test</Button>
     </StackPanel>
 </UserControl>

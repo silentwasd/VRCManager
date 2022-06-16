@@ -19,8 +19,8 @@
         </Panel>
     
         <Panel IsVisible="{Binding AuthViewModel.Authorized}">
-            <TextBlock Text="{Binding AuthViewModel.CurrentUser.DisplayName}"></TextBlock>
-        </Panel>    
+            <views:CatalogView DataContext="{Binding CatalogViewModel}" />
+        </Panel>
     </Panel>
 
 </Window>
