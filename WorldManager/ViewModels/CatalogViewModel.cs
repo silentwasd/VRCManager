@@ -1,7 +1,8 @@
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Threading;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -14,6 +15,8 @@ public class CatalogViewModel : ViewModelBase
 
     private CatalogWorldViewModel _selectedWorld;
 
+    private string _search;
+
     public CatalogViewModel()
     {
         _apiConfig = new Configuration();
@@ -23,12 +26,37 @@ public class CatalogViewModel : ViewModelBase
     {
         _apiConfig = apiConfig;
         LoadActiveWorlds();
+
+        this.WhenAnyValue(x => x.Search)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(x =>
+            {
+                if (String.IsNullOrWhiteSpace(x))
+                    LoadActiveWorlds();
+                else
+                    LoadFoundWorlds();
+            });
     }
 
     private void LoadActiveWorlds()
     {
         var worldsApi = new WorldsApi(_apiConfig);
         var worlds = worldsApi.GetActiveWorlds();
+        ActiveWorlds.Clear();
+        foreach (var world in worlds)
+        {
+            var item = new CatalogWorldViewModel(world);
+            ActiveWorlds.Add(item);
+            Task.Run(item.LoadThumbnail);
+        }
+    }
+    
+    private void LoadFoundWorlds()
+    {
+        var worldsApi = new WorldsApi(_apiConfig);
+        var worlds = worldsApi.SearchWorlds(search: Search);
+        ActiveWorlds.Clear();
         foreach (var world in worlds)
         {
             var item = new CatalogWorldViewModel(world);
@@ -43,5 +71,11 @@ public class CatalogViewModel : ViewModelBase
     {
         get => _selectedWorld;
         set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+    }
+
+    public string Search
+    {
+        get => _search;
+        set => this.RaiseAndSetIfChanged(ref _search, value);
     }
 }

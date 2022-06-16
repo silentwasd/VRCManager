@@ -11,6 +11,8 @@
     </Design.DataContext>
     
     <DockPanel>
+        <TextBox DockPanel.Dock="Top" Text="{Binding Search}" Watermark="Поиск" />
+        
         <TextBox AcceptsReturn="True" AcceptsTab="True" Text="{Binding SelectedWorld.Json}"
                  DockPanel.Dock="Right" Width="400" />
         

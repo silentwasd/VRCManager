@@ -1,8 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
@@ -45,9 +42,17 @@ public class CatalogWorldViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _json, value);
     }
 
-    public DateTime PublicationDate => DateTime.Parse(World.PublicationDate);
+    public DateTime? PublicationDate => World.PublicationDate == "none" ? null : DateTime.Parse(World.PublicationDate);
 
-    public string PublicationDateFormat => PublicationDate.ToShortDateString();
+    public string PublicationDateFormat
+    {
+        get
+        {
+            if (PublicationDate == null)
+                return "Неизвестно";
+            return PublicationDate?.ToShortDateString();
+        }
+    }
 
     private async Task<Stream> LoadThumbnailBitmap()
     {
