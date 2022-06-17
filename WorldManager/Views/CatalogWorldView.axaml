@@ -10,16 +10,46 @@
         <viewModels:CatalogWorldViewModel />
     </Design.DataContext>
     
-    <StackPanel Orientation="Horizontal" Width="600">
+    <StackPanel Orientation="Horizontal" Width="400">
         <Image Height="128" Source="{Binding Thumbnail}" />
         <StackPanel Margin="10,0">
             <TextBlock FontSize="20" FontWeight="Bold"
                        Text="{Binding World.Name}"></TextBlock>
             
             <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Автор:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding World.AuthorName}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Дата публикации:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
                            Text="{Binding PublicationDateFormat}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Популярность:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding World.Popularity}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Тренд:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding World.Heat}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Активных:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding World.Occupants}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Вместимость:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding World.Capacity}"></TextBlock>
             </StackPanel>
         </StackPanel>
     </StackPanel>

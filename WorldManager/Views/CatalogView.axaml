@@ -11,7 +11,24 @@
     </Design.DataContext>
     
     <DockPanel>
-        <TextBox DockPanel.Dock="Top" Text="{Binding Search}" Watermark="Поиск" />
+        <DockPanel DockPanel.Dock="Top">
+            <CheckBox DockPanel.Dock="Right" Margin="5, 0"
+                      IsChecked="{Binding Featured}">Featured</CheckBox>
+            
+            <CheckBox DockPanel.Dock="Right" Margin="5, 0"
+                      IsChecked="{Binding Quest}">Quest</CheckBox>
+            
+            <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding Sort}"
+                      Items="{Binding SortList}">
+                <ComboBox.DataTemplates>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Value}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.DataTemplates>
+            </ComboBox>
+            
+            <TextBox Text="{Binding Search}" Watermark="Поиск" />
+        </DockPanel>
         
         <TextBox AcceptsReturn="True" AcceptsTab="True" Text="{Binding SelectedWorld.Json}"
                  DockPanel.Dock="Right" Width="400" />
