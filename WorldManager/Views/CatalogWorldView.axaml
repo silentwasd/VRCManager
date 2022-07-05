@@ -10,8 +10,8 @@
         <viewModels:CatalogWorldViewModel />
     </Design.DataContext>
     
-    <StackPanel Orientation="Horizontal" Width="400">
-        <Image Height="128" Source="{Binding Thumbnail}" />
+    <StackPanel Orientation="Horizontal" Width="500" ToolTip.Tip="{Binding World.Name}">
+        <Image Width="256" Height="192" Source="{Binding Thumbnail}" />
         <StackPanel Margin="10,0">
             <TextBlock FontSize="20" FontWeight="Bold"
                        Text="{Binding World.Name}"></TextBlock>
@@ -26,6 +26,12 @@
                 <TextBlock FontWeight="Bold">Дата публикации:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
                            Text="{Binding PublicationDateFormat}"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Дата обновления:</TextBlock>
+                <TextBlock Margin="5, 0, 0, 0"
+                           Text="{Binding UpdateDateFormat}"></TextBlock>
             </StackPanel>
             
             <StackPanel Orientation="Horizontal">

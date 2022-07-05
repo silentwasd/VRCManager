@@ -44,6 +44,8 @@ public class CatalogWorldViewModel : ViewModelBase
 
     public DateTime? PublicationDate => World.PublicationDate == "none" ? null : DateTime.Parse(World.PublicationDate);
 
+    public DateTime UpdateDate => World.UpdatedAt;
+
     public string PublicationDateFormat
     {
         get
@@ -53,6 +55,8 @@ public class CatalogWorldViewModel : ViewModelBase
             return PublicationDate?.ToShortDateString();
         }
     }
+
+    public string UpdateDateFormat => UpdateDate.ToShortDateString();
 
     private async Task<Stream> LoadThumbnailBitmap()
     {

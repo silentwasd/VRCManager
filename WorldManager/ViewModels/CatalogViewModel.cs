@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
+using VRChat.API.Model;
 
 namespace WorldManager.ViewModels;
 
 public class CatalogViewModel : ViewModelBase
 {
+    private const int Count = 50;
+    
     private Configuration _apiConfig;
+
+    private WorldsApi _worldsApi;
 
     private CatalogWorldViewModel _selectedWorld;
 
@@ -23,6 +28,12 @@ public class CatalogViewModel : ViewModelBase
 
     private bool _featured;
 
+    private int _offset;
+
+    private bool _loading;
+
+    private int _counter;
+
     public CatalogViewModel()
     {
         _apiConfig = new Configuration();
@@ -31,68 +42,68 @@ public class CatalogViewModel : ViewModelBase
     public CatalogViewModel(Configuration apiConfig)
     {
         _apiConfig = apiConfig;
+        _worldsApi = new WorldsApi(_apiConfig);
 
         Sort = new KeyValuePair<string, string>("popularity", "популярность");
         Quest = false;
 
-        this.WhenAnyValue(x => x.Search)
+        this.WhenAnyValue(x => x.Search, x => x.Featured, x => x.Sort, x => x.Quest,
+                (search, featured, sort, quest) => sort.Key != String.Empty)
             .Throttle(TimeSpan.FromSeconds(1))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(x =>
             {
+                Offset = 0;
                 LoadFoundWorlds();
             });
-        
-        this.WhenAnyValue(x => x.Featured)
-            .Throttle(TimeSpan.FromSeconds(1))
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(x =>
-            {
-                LoadFoundWorlds();
-            });
-        
-        this.WhenAnyValue(x => x.Sort)
-            .Throttle(TimeSpan.FromSeconds(1))
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(x =>
-            {
-                if (x.Key != String.Empty)
-                    LoadFoundWorlds();
-            });
-        
-        this.WhenAnyValue(x => x.Quest)
-            .Throttle(TimeSpan.FromSeconds(1))
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(x =>
-            {
-                LoadFoundWorlds();
-            });
-    }
 
-    private void LoadActiveWorlds()
-    {
-        var worldsApi = new WorldsApi(_apiConfig);
-        var worlds = worldsApi.GetActiveWorlds();
-        ActiveWorlds.Clear();
-        foreach (var world in worlds)
+        var backAvailable = this.WhenAnyValue(x => x.Offset,
+            x => x > 0);
+
+        var nextAvailable = ActiveWorlds.WhenAnyValue(x => x.Count,
+            x => x == Count);
+
+        Reset = ReactiveCommand.Create(() =>
         {
-            var item = new CatalogWorldViewModel(world);
-            ActiveWorlds.Add(item);
-            Task.Run(item.LoadThumbnail);
-        }
+            Offset = 0;
+            LoadFoundWorlds();
+        });
+        
+        Back = ReactiveCommand.Create(() =>
+        {
+            Offset -= Count;
+            LoadFoundWorlds();
+        }, backAvailable);
+        
+        Next = ReactiveCommand.Create(() =>
+        {
+            Offset += Count;
+            LoadFoundWorlds();
+        }, nextAvailable);
     }
     
-    private void LoadFoundWorlds()
+    private async void LoadFoundWorlds()
     {
-        var worldsApi = new WorldsApi(_apiConfig);
-        var worlds = worldsApi.SearchWorlds(search: Search, featured: Featured.ToString(), sort: Sort.Key, platform: Quest ? "android" : "");
+        Loading = true;
+        
+        List<LimitedWorld>? worlds = await _worldsApi.SearchWorldsAsync(search: Search, featured: Featured ? "True" : null,
+            sort: Sort.Key, platform: Quest ? "android" : "", n: Count, offset: Offset);
         ActiveWorlds.Clear();
+
+        if (worlds == null)
+        {
+            Loading = false;
+            return;
+        }
+
         foreach (var world in worlds)
         {
             var item = new CatalogWorldViewModel(world);
             ActiveWorlds.Add(item);
-            Task.Run(item.LoadThumbnail);
+            item.LoadThumbnail();
         }
+
+        Loading = false;
     }
 
     public ObservableCollection<CatalogWorldViewModel> ActiveWorlds { get; } = new();
@@ -142,4 +153,28 @@ public class CatalogViewModel : ViewModelBase
         { "magic", "магия" },
         { "name", "название" }
     };
+
+    private int Offset
+    {
+        get => _offset;
+        set => this.RaiseAndSetIfChanged(ref _offset, value);
+    }
+
+    public bool Loading
+    {
+        get => _loading;
+        set => this.RaiseAndSetIfChanged(ref _loading, value);
+    }
+
+    public int Counter
+    {
+        get => _counter;
+        set => this.RaiseAndSetIfChanged(ref _counter, value);
+    }
+
+    public ReactiveCommand<Unit, Unit> Reset { get; }
+    
+    public ReactiveCommand<Unit, Unit> Back { get; }
+
+    public ReactiveCommand<Unit, Unit> Next { get; }
 }
