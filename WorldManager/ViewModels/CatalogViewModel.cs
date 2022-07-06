@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -13,14 +14,12 @@ namespace WorldManager.ViewModels;
 public class CatalogViewModel : ViewModelBase
 {
     private const int Count = 50;
-    
-    private Configuration _apiConfig;
 
-    private WorldsApi _worldsApi;
+    private readonly WorldsApi _worldsApi;
 
-    private CatalogWorldViewModel _selectedWorld;
+    private CatalogWorldViewModel? _selectedWorld;
 
-    private string _search;
+    private string _search = "";
 
     private KeyValuePair<string, string> _sort;
 
@@ -36,22 +35,24 @@ public class CatalogViewModel : ViewModelBase
 
     public CatalogViewModel()
     {
-        _apiConfig = new Configuration();
+        _worldsApi = new WorldsApi(new Configuration());
+        Reset = ReactiveCommand.Create(() => {});
+        Back = ReactiveCommand.Create(() => {});
+        Next = ReactiveCommand.Create(() => {});
     }
     
     public CatalogViewModel(Configuration apiConfig)
     {
-        _apiConfig = apiConfig;
-        _worldsApi = new WorldsApi(_apiConfig);
+        _worldsApi = new WorldsApi(apiConfig);
 
         Sort = new KeyValuePair<string, string>("popularity", "популярность");
         Quest = false;
 
         this.WhenAnyValue(x => x.Search, x => x.Featured, x => x.Sort, x => x.Quest,
-                (search, featured, sort, quest) => sort.Key != String.Empty)
+                (_, _, sort, _) => sort.Key != String.Empty)
             .Throttle(TimeSpan.FromSeconds(1))
             .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(x =>
+            .Subscribe(_ =>
             {
                 Offset = 0;
                 LoadFoundWorlds();
@@ -60,8 +61,10 @@ public class CatalogViewModel : ViewModelBase
         var backAvailable = this.WhenAnyValue(x => x.Offset,
             x => x > 0);
 
-        var nextAvailable = ActiveWorlds.WhenAnyValue(x => x.Count,
-            x => x == Count);
+        var nextAvailable = this.WhenAnyValue(
+            x => x.ActiveWorlds.Count, x => x.Offset,
+            (count, offset) => count == Count && offset + Count < 1000
+        );
 
         Reset = ReactiveCommand.Create(() =>
         {
@@ -100,15 +103,24 @@ public class CatalogViewModel : ViewModelBase
         {
             var item = new CatalogWorldViewModel(world);
             ActiveWorlds.Add(item);
-            item.LoadThumbnail();
         }
 
         Loading = false;
+        
+        LoadWorldThumbnails();
+    }
+
+    private void LoadWorldThumbnails()
+    {
+        foreach (var item in ActiveWorlds)
+        {
+            Task.Run(item.LoadThumbnail);
+        }
     }
 
     public ObservableCollection<CatalogWorldViewModel> ActiveWorlds { get; } = new();
 
-    public CatalogWorldViewModel SelectedWorld
+    public CatalogWorldViewModel? SelectedWorld
     {
         get => _selectedWorld;
         set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);

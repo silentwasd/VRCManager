@@ -13,14 +13,28 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Panel>
-        <Panel IsVisible="{Binding !AuthViewModel.Authorized}" Margin="20">
-            <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400"/>
+    <DockPanel>
+        <Panel>
+            <Panel IsVisible="{Binding !AuthViewModel.Authorized}" Margin="20">
+                <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400"/>
+            </Panel>
+            
+            <DockPanel IsVisible="{Binding AuthViewModel.Authorized}">
+                <CheckBox DockPanel.Dock="Bottom"
+                          Content="Test Mode"
+                          IsChecked="{Binding Test}"></CheckBox>
+                
+                <Panel>
+                    <Panel IsVisible="{Binding !Test}">
+                        <views:CatalogView DataContext="{Binding CatalogViewModel}" />
+                    </Panel>
+                
+                    <Panel IsVisible="{Binding Test}">
+                        <views:TestView DataContext="{Binding TestViewModel}"></views:TestView>
+                    </Panel>
+                </Panel>
+            </DockPanel>
         </Panel>
-    
-        <Panel IsVisible="{Binding AuthViewModel.Authorized}">
-            <views:CatalogView DataContext="{Binding CatalogViewModel}" />
-        </Panel>
-    </Panel>
+    </DockPanel>
 
 </Window>

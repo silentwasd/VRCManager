@@ -1,7 +1,11 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using Newtonsoft.Json;
 using ReactiveUI;
 using VRChat.API.Model;
 using WorldManager.Services;
@@ -11,24 +15,32 @@ namespace WorldManager.ViewModels;
 
 public class CatalogWorldViewModel : ViewModelBase
 {
-    private LimitedWorld _world;
-
     private Bitmap? _thumbnail;
 
-    private string _json;
+    private string _json = "";
     
     public CatalogWorldViewModel()
     {
-        _world = new LimitedWorld();
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        var worldStream = assets?.Open(new Uri("avares://WorldManager/Assets/default_world.json"));
+        
+        if (worldStream == null)
+        {
+            World = new LimitedWorld();
+            return;
+        }
+
+        var worldData = new StreamReader(worldStream).ReadToEnd();
+        World = JsonConvert.DeserializeObject<LimitedWorld>(worldData);
     }
     
     public CatalogWorldViewModel(LimitedWorld world)
     {
-        _world = world;
+        World = world;
         _json = world.ToJson();
     }
 
-    public LimitedWorld World => _world;
+    public LimitedWorld World { get; }
 
     public Bitmap? Thumbnail
     {
@@ -49,10 +61,9 @@ public class CatalogWorldViewModel : ViewModelBase
     public string PublicationDateFormat
     {
         get
-        {
-            if (PublicationDate == null)
-                return "Неизвестно";
-            return PublicationDate?.ToShortDateString();
+        { 
+            var result = PublicationDate?.ToShortDateString();
+            return result ?? "Неизвестно";
         }
     }
 
@@ -63,18 +74,27 @@ public class CatalogWorldViewModel : ViewModelBase
         var id = World.Id;
         if (File.Exists("images/" + id + ".bmp"))
         {
-            return new MemoryStream(File.ReadAllBytes("images/" + id + ".bmp"));
+            return new MemoryStream(await File.ReadAllBytesAsync("images/" + id + ".bmp"));
         }
         else
         {
-            var data = await AppCompose.HttpClient.GetByteArrayAsync(World.ThumbnailImageUrl);
+            var response = AppCompose.HttpClient.GetAsync(World.ThumbnailImageUrl);
             
+            if (response.Result.StatusCode != HttpStatusCode.OK)
+            {
+                var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+                return assets?.Open(new Uri("avares://WorldManager/Assets/default_world_thumb.png")) ??
+                       new MemoryStream();
+            }
+
+            var data = await response.Result.Content.ReadAsByteArrayAsync();
+
             if (!Directory.Exists("images"))
                 Directory.CreateDirectory("images");
             
             await File.WriteAllBytesAsync("images/" + id + ".bmp", data);
             
-            return new MemoryStream(data);            
+            return new MemoryStream(data);
         }
     }
 

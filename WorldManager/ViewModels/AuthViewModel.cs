@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.Net;
 using System.Reactive;
 using ReactiveUI;
 using VRChat.API.Api;
@@ -14,15 +12,15 @@ public class AuthViewModel : ViewModelBase
 {
     private bool _authorized;
 
-    private CurrentUser _currentUser;
+    private CurrentUser? _currentUser;
 
-    private Configuration _apiConfig;
+    private Configuration? _apiConfig;
     
-    private string _username;
+    private string _username = "";
 
-    private string _password;
+    private string _password = "";
 
-    private string _errorString;
+    private string _errorString = "";
 
     public AuthViewModel()
     {
@@ -93,25 +91,17 @@ public class AuthViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _errorString, value);
     }
     
-    public CurrentUser CurrentUser
+    public CurrentUser? CurrentUser
     {
         get => _currentUser;
         set => this.RaiseAndSetIfChanged(ref _currentUser, value);
     }
 
-    public Configuration ApiConfig
+    public Configuration? ApiConfig
     {
         get => _apiConfig;
         set => this.RaiseAndSetIfChanged(ref _apiConfig, value);
     }
 
     public ReactiveCommand<Unit, Unit> Enter { get; }
-
-    public void Test()
-    {
-        var web = new WebClient();
-        web.Headers.Add("User-Agent", "VRCManager/1.0.0");
-        var bytes = web.DownloadData("https://api.vrchat.cloud/api/1/image/file_c2b7ad18-5276-4e9b-aef7-8e18555e5030/7/256");
-        Debug.WriteLine(bytes.Length);
-    }
 }

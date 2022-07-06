@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
+             x:Class="WorldManager.Views.TestView">
+    
+    <Design.DataContext>
+        <viewModels:TestViewModel />
+    </Design.DataContext>
+    
+    <DockPanel>
+        <Panel Background="#baddff">
+            <StackPanel DockPanel.Dock="Left" Width="200" Spacing="10" Margin="10">
+                <TextBox Watermark="Search" Background="White" Text="{Binding Search}" />
+            
+                <TextBox Watermark="Sort" Background="White" Text="{Binding Sort}" />
+            
+                <TextBox Watermark="N" Background="White" Text="{Binding N}" />
+            
+                <TextBox Watermark="Offset" Background="White" Text="{Binding Offset}" />
+            
+                <Button Content="Find"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Background="White"
+                        Command="{Binding Find}" />
+                
+                <Button Content="Find items"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Background="White"
+                        Command="{Binding FindItems}" />
+            </StackPanel>
+        </Panel>
+        
+        <TextBox AcceptsReturn="True"
+                 AcceptsTab="True"
+                 IsReadOnly="True"
+                 BorderThickness="0"
+                 Text="{Binding Response}" />
+    </DockPanel>
+</UserControl>
