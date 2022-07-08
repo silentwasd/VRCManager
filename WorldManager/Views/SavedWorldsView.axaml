@@ -1,0 +1,29 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             xmlns:views="clr-namespace:WorldManager.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WorldManager.Views.SavedWorldsView">
+    
+    <Design.DataContext>
+        <viewModels:SavedWorldsViewModel />
+    </Design.DataContext>
+    
+    <DockPanel>
+        <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
+            <views:SavedSelectionView Width="300"
+                                      DataContext="{Binding Selection}"/>
+        </Panel>
+        
+        <ListBox Items="{Binding Items}"
+                 SelectedItem="{Binding SelectedWorld}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel HorizontalAlignment="Center" Margin="0, 10" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </DockPanel>
+</UserControl>

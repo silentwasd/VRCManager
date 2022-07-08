@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             xmlns:views="clr-namespace:WorldManager.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
              x:Class="WorldManager.Views.CatalogView">
     
@@ -44,6 +45,11 @@
             <Button Content="Предыдущие" Width="130" HorizontalContentAlignment="Center" Command="{Binding Back}" />
             <Button Content="Следующие" Width="130" HorizontalContentAlignment="Center" Command="{Binding Next}" />
         </StackPanel>
+        
+        <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
+            <views:CatalogSelectionView Width="300"
+                                        DataContext="{Binding Selection}"/>
+        </Panel>
         
         <Panel>
             <TextBlock IsVisible="{Binding Loading}"

@@ -1,0 +1,31 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="180" d:DesignHeight="300"
+             x:Class="WorldManager.Views.NavigationView">
+    
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+    
+    <Panel Background="#77a1c9">
+        <StackPanel Margin="10" Spacing="10">
+            <Button Content="Каталог" HorizontalAlignment="Stretch"
+                    Command="{Binding SelectView}"
+                    CommandParameter="catalog"
+                    Background="White" />
+        
+            <Button Content="Сохраненные миры" HorizontalAlignment="Stretch"
+                    Command="{Binding SelectView}"
+                    CommandParameter="saved"
+                    Background="White" />
+        
+            <Button Content="Тест" HorizontalAlignment="Stretch"
+                    Command="{Binding SelectView}"
+                    CommandParameter="test"
+                    Background="White" />
+        </StackPanel>
+    </Panel>
+</UserControl>

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -18,6 +19,8 @@ public class CatalogViewModel : ViewModelBase
     private readonly WorldsApi _worldsApi;
 
     private CatalogWorldViewModel? _selectedWorld;
+
+    private CatalogSelectionViewModel? _selection;
 
     private string _search = "";
 
@@ -58,6 +61,13 @@ public class CatalogViewModel : ViewModelBase
                 LoadFoundWorlds();
             });
 
+        this.WhenAnyValue(x => x.SelectedWorld)
+            .Subscribe(x =>
+            {
+                if (x != null)
+                    Selection = new(x);
+            });
+
         var backAvailable = this.WhenAnyValue(x => x.Offset,
             x => x > 0);
 
@@ -89,15 +99,12 @@ public class CatalogViewModel : ViewModelBase
     {
         Loading = true;
         
-        List<LimitedWorld>? worlds = await _worldsApi.SearchWorldsAsync(search: Search, featured: Featured ? "True" : null,
+        var response = await _worldsApi.SearchWorldsWithHttpInfoAsync(search: Search, featured: Featured ? "True" : null,
             sort: Sort.Key, platform: Quest ? "android" : "", n: Count, offset: Offset);
-        ActiveWorlds.Clear();
 
-        if (worlds == null)
-        {
-            Loading = false;
-            return;
-        }
+        var worlds = JsonConvert.DeserializeObject<List<LimitedWorld>>(response.RawContent);
+
+        ActiveWorlds.Clear();
 
         foreach (var world in worlds)
         {
@@ -124,6 +131,12 @@ public class CatalogViewModel : ViewModelBase
     {
         get => _selectedWorld;
         set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+    }
+
+    public CatalogSelectionViewModel? Selection
+    {
+        get => _selection;
+        set => this.RaiseAndSetIfChanged(ref _selection, value);
     }
 
     public string Search

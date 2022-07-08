@@ -1,32 +1,82 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace WorldManager.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private AuthViewModel _authViewModel = new();
+        
         private CatalogViewModel? _catalogViewModel;
+
+        private SavedWorldsViewModel? _savedWorldsViewModel;
         
         private TestViewModel? _testViewModel;
 
-        private bool _test;
+        private string _currentView = "";
+
+        private readonly ObservableAsPropertyHelper<bool> _isAuthView;
+        
+        private readonly ObservableAsPropertyHelper<bool> _isCatalogView;
+        
+        private readonly ObservableAsPropertyHelper<bool> _isSavedView;
+        
+        private readonly ObservableAsPropertyHelper<bool> _isTestView;
 
         public MainWindowViewModel()
         {
+            CurrentView = "auth";
+            
             this.WhenAnyValue(x => x.AuthViewModel.Authorized)
                 .Subscribe(x =>
                 {
                     CatalogViewModel = x && AuthViewModel.ApiConfig != null ? new CatalogViewModel(AuthViewModel.ApiConfig) : null;
+                    SavedWorldsViewModel = x && AuthViewModel.ApiConfig != null ? new SavedWorldsViewModel(AuthViewModel.ApiConfig) : null;
                     TestViewModel = x && AuthViewModel.ApiConfig != null ? new TestViewModel(AuthViewModel.ApiConfig) : null;
+
+                    if (CatalogViewModel != null)
+                        CurrentView = "catalog";
                 });
+            
+            _isAuthView = this
+                .WhenAnyValue(x => x.CurrentView)
+                .Select(x => x == "auth")
+                .ToProperty(this, x => x.IsAuthView);
+            
+            _isCatalogView = this
+                .WhenAnyValue(x => x.CurrentView)
+                .Select(x => x == "catalog")
+                .ToProperty(this, x => x.IsCatalogView);
+            
+            _isSavedView = this
+                .WhenAnyValue(x => x.CurrentView)
+                .Select(x => x == "saved")
+                .ToProperty(this, x => x.IsSavedView);
+            
+            _isTestView = this
+                .WhenAnyValue(x => x.CurrentView)
+                .Select(x => x == "test")
+                .ToProperty(this, x => x.IsTestView);
         }
 
-        public AuthViewModel AuthViewModel { get; } = new();
+        public AuthViewModel AuthViewModel
+        {
+            get => _authViewModel;
+            set => this.RaiseAndSetIfChanged(ref _authViewModel, value);
+        }
 
         public CatalogViewModel? CatalogViewModel
         {
             get => _catalogViewModel;
             set => this.RaiseAndSetIfChanged(ref _catalogViewModel, value);
+        }
+
+        public SavedWorldsViewModel? SavedWorldsViewModel
+        {
+            get => _savedWorldsViewModel;
+            set => this.RaiseAndSetIfChanged(ref _savedWorldsViewModel, value);
         }
         
         public TestViewModel? TestViewModel
@@ -35,10 +85,45 @@ namespace WorldManager.ViewModels
             set => this.RaiseAndSetIfChanged(ref _testViewModel, value);
         }
 
-        public bool Test
+        private string CurrentView
         {
-            get => _test;
-            set => this.RaiseAndSetIfChanged(ref _test, value);
+            get => _currentView;
+            set => this.RaiseAndSetIfChanged(ref _currentView, value);
+        }
+
+        private ViewModelBase CurrentViewModel
+        {
+            get
+            {
+                switch (CurrentView)
+                {
+                    case "catalog":
+                        return CatalogViewModel;
+                    
+                    case "saved":
+                        return SavedWorldsViewModel;
+                    
+                    case "test":
+                        return TestViewModel;
+                    
+                    default:
+                        return AuthViewModel;
+                }
+            }
+        }
+
+        public bool IsAuthView => _isAuthView.Value;
+
+        public bool IsCatalogView => _isCatalogView.Value;
+
+        public bool IsSavedView => _isSavedView.Value;
+
+        public bool IsTestView => _isTestView.Value;
+
+        public void SelectView(string view)
+        {
+            CurrentView = view;
+            CurrentViewModel.NavTrigger();
         }
     }
 }

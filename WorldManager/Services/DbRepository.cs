@@ -7,16 +7,17 @@ namespace WorldManager.Services;
 
 public class DbRepository
 {
-    public List<World> Worlds => new();
-
     public static DbRepository Load()
     {
-        return !File.Exists("./db.json") ? new DbRepository() : 
-            JsonConvert.DeserializeObject<DbRepository>(File.ReadAllText("./db.json"));
+        return !File.Exists("./db.json")
+            ? new DbRepository()
+            : JsonConvert.DeserializeObject<DbRepository>(File.ReadAllText("./db.json"));
     }
 
     public void Save()
     {
         File.WriteAllText("./db.json", JsonConvert.SerializeObject(this));
     }
+
+    public List<World> Worlds { get; } = new();
 }

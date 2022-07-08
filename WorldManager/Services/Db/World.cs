@@ -4,5 +4,28 @@ namespace WorldManager.Services.Db;
 
 public class World
 {
-    public LimitedWorld Limited { get; set; }
+    public string Id { get; set; }
+    
+    public string Name { get; set; }
+    
+    public string AuthorId { get; set; }
+    
+    public string AuthorName { get; set; }
+    
+    public string ThumbnailImageUrl { get; set; }
+    
+    public string ImageUrl { get; set; }
+
+    public static World FromLimited(LimitedWorld source)
+    {
+        return new World
+        {
+            Id = source.Id,
+            Name = source.Name,
+            AuthorId = source.AuthorId,
+            AuthorName = source.AuthorName,
+            ThumbnailImageUrl = source.ThumbnailImageUrl,
+            ImageUrl = source.ImageUrl
+        };
+    }
 }

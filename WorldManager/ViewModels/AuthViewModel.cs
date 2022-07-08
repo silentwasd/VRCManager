@@ -21,7 +21,7 @@ public class AuthViewModel : ViewModelBase
     private string _password = "";
 
     private string _errorString = "";
-
+    
     public AuthViewModel()
     {
         var canEnter = this.WhenAnyValue(x => x.Username,

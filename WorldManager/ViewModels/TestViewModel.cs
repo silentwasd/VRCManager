@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
+using VRChat.API.Model;
 
 namespace WorldManager.ViewModels;
 
@@ -67,13 +69,9 @@ public class TestViewModel : ViewModelBase
 
     public void FindItems()
     {
-        var items = _worldsApi.SearchWorlds(search: Search, sort: Sort, n: N, offset: Offset);
+        var response = _worldsApi.SearchWorldsWithHttpInfo(search: Search, sort: Sort, n: N, offset: Offset);
 
-        if (items == null)
-        {
-            Response = "";
-            return;
-        }
+        var items = JsonConvert.DeserializeObject<List<LimitedWorld>>(response.RawContent);
 
         Response = "";
         foreach (var item in items)

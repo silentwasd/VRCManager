@@ -14,26 +14,28 @@
     </Design.DataContext>
 
     <DockPanel>
+        <views:NavigationView IsVisible="{Binding !IsAuthView}"
+                              DockPanel.Dock="Left"
+                              Width="180" />
+        
         <Panel>
-            <Panel IsVisible="{Binding !AuthViewModel.Authorized}" Margin="20">
-                <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400"/>
+            <Panel IsVisible="{Binding IsAuthView}" Margin="20">
+                <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" />
             </Panel>
             
-            <DockPanel IsVisible="{Binding AuthViewModel.Authorized}">
-                <CheckBox DockPanel.Dock="Bottom"
-                          Content="Test Mode"
-                          IsChecked="{Binding Test}"></CheckBox>
-                
-                <Panel>
-                    <Panel IsVisible="{Binding !Test}">
-                        <views:CatalogView DataContext="{Binding CatalogViewModel}" />
-                    </Panel>
-                
-                    <Panel IsVisible="{Binding Test}">
-                        <views:TestView DataContext="{Binding TestViewModel}"></views:TestView>
-                    </Panel>
-                </Panel>
-            </DockPanel>
+            <Panel IsVisible="{Binding IsCatalogView}">
+                <DockPanel>
+                    <views:CatalogView DataContext="{Binding CatalogViewModel}" />
+                </DockPanel>
+            </Panel>
+            
+            <Panel IsVisible="{Binding IsSavedView}">
+                <views:SavedWorldsView DataContext="{Binding SavedWorldsViewModel}" />
+            </Panel>
+            
+            <Panel IsVisible="{Binding IsTestView}">
+                <views:TestView DataContext="{Binding TestViewModel}" />
+            </Panel>
         </Panel>
     </DockPanel>
 
