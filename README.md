@@ -21,7 +21,7 @@
 
 Ссылки:
 
-* [Trello](https://trello.com/invite/b/pbnX5kb6/9d15d0e040ccec7d7ccbfb8222c2c6ef/vrc-manager)
+* [Trello](https://trello.com/b/pbnX5kb6/vrc-manager)
 * [Последняя сборка](https://github.com/silentwasd/VRCManager/releases/tag/alpha-manager-0.4)
 
 ### Статус User Manager
