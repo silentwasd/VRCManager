@@ -6,24 +6,25 @@
              xmlns:views="clr-namespace:WorldManager.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WorldManager.Views.SavedWorldsView">
-    
+
     <Design.DataContext>
         <viewModels:SavedWorldsViewModel />
     </Design.DataContext>
-    
+
     <DockPanel>
         <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
             <views:SavedSelectionView Width="300"
-                                      DataContext="{Binding Selection}"/>
+                                      DataContext="{Binding Selection}" />
         </Panel>
-        
-        <ListBox Items="{Binding Items}"
-                 SelectedItem="{Binding SelectedWorld}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Center" Margin="0, 10" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+
+        <ScrollViewer>
+            <ItemsRepeater Items="{Binding Groups}">
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <views:GroupView />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

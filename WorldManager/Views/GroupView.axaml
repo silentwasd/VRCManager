@@ -1,0 +1,46 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             xmlns:views="clr-namespace:WorldManager.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WorldManager.Views.GroupView">
+
+    <Design.DataContext>
+        <viewModels:GroupViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <StackPanel Background="#baddff" Orientation="Horizontal">
+            <TextBlock Text="{Binding Group}"
+                       FontWeight="Bold"
+                       FontSize="20"
+                       Margin="10, 10, 0, 10"
+                       Foreground="#13304d" />
+
+            <TextBlock Text="{Binding Worlds.Count}"
+                       FontSize="20"
+                       Margin="10, 10, 0, 10"
+                       Foreground="#13304d" />
+        </StackPanel>
+
+        <ItemsRepeater Items="{Binding Worlds}" Margin="15">
+            <ItemsRepeater.Layout>
+                <UniformGridLayout MinRowSpacing="15" MinColumnSpacing="15" />
+            </ItemsRepeater.Layout>
+
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{Binding WorldBackground}"
+                            Padding="10"
+                            CornerRadius="10"
+                            PointerPressed="OnGroupSelected">
+                        <views:SavedWorldView />
+                    </Border>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+    </StackPanel>
+
+</UserControl>

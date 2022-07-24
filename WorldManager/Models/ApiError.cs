@@ -10,12 +10,12 @@ public class ApiError
 
     public static ApiError Parse(object content)
     {
-        var strContent = (string)content;
+        var strContent = (string) content;
         var json = JObject.Parse(strContent);
         return new ApiError
         {
-            Message = (string)json["error"]["message"],
-            StatusCode = (string)json["error"]["status_code"]
+            Message = (string) json["error"]["message"],
+            StatusCode = (string) json["error"]["status_code"]
         };
     }
 }

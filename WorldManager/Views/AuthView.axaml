@@ -5,26 +5,28 @@
              xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
              x:Class="WorldManager.Views.AuthView">
-    
+
     <Design.DataContext>
-        <viewModels:AuthViewModel/>
+        <viewModels:AuthViewModel />
     </Design.DataContext>
-    
+
     <StackPanel>
         <TextBlock>Username</TextBlock>
-        <TextBox Margin="0, 0, 0, 10" Text="{Binding Username}"></TextBox>
-        
+        <TextBox Margin="0, 0, 0, 10" Text="{Binding Username}" />
+
         <TextBlock>Password</TextBlock>
-        <TextBox Margin="0, 0, 0, 10" PasswordChar="*" Text="{Binding Password}"></TextBox>
-        
+        <TextBox Margin="0, 0, 0, 10" PasswordChar="*" Text="{Binding Password}" />
+
         <TextBlock IsVisible="{Binding !!ErrorString}"
                    Margin="0, 0, 0, 10"
                    Foreground="Red"
                    Text="{Binding ErrorString}"
-                   ToolTip.Tip="{Binding ErrorString}"></TextBlock>
-        
+                   ToolTip.Tip="{Binding ErrorString}" />
+
         <Button Width="{Binding $parent[0].Bounds.Width}"
                 HorizontalContentAlignment="Center"
-                Command="{Binding Enter}">Enter</Button>
+                Command="{Binding Enter}">
+            Enter
+        </Button>
     </StackPanel>
 </UserControl>

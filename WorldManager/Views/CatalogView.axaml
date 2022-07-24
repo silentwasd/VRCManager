@@ -6,57 +6,61 @@
              xmlns:views="clr-namespace:WorldManager.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
              x:Class="WorldManager.Views.CatalogView">
-    
+
     <Design.DataContext>
         <viewModels:CatalogViewModel />
     </Design.DataContext>
-    
+
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <CheckBox DockPanel.Dock="Right" Margin="5, 0"
-                      IsChecked="{Binding Featured}">Featured</CheckBox>
-            
+                      IsChecked="{Binding Featured}">
+                Featured
+            </CheckBox>
+
             <CheckBox DockPanel.Dock="Right" Margin="5, 0"
-                      IsChecked="{Binding Quest}">Quest</CheckBox>
-            
+                      IsChecked="{Binding Quest}">
+                Quest
+            </CheckBox>
+
             <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding Sort}"
                       Items="{Binding SortList}">
                 <ComboBox.DataTemplates>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Value}"></TextBlock>
+                        <TextBlock Text="{Binding Value}" />
                     </DataTemplate>
                 </ComboBox.DataTemplates>
             </ComboBox>
-            
+
             <TextBox Text="{Binding Search}" Watermark="Поиск" />
         </DockPanel>
-        
+
         <!--
         <TextBlock DockPanel.Dock="Bottom" Text="{Binding Counter}" />
         -->
-        
+
         <!--
         <TextBox AcceptsReturn="True" AcceptsTab="True" Text="{Binding SelectedWorld.Json}"
                  DockPanel.Dock="Right" Width="400" />
                  -->
-        
+
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="В начало" Width="130" HorizontalContentAlignment="Center" Command="{Binding Reset}" />
             <Button Content="Предыдущие" Width="130" HorizontalContentAlignment="Center" Command="{Binding Back}" />
             <Button Content="Следующие" Width="130" HorizontalContentAlignment="Center" Command="{Binding Next}" />
         </StackPanel>
-        
+
         <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
             <views:CatalogSelectionView Width="300"
-                                        DataContext="{Binding Selection}"/>
+                                        DataContext="{Binding Selection}" />
         </Panel>
-        
+
         <Panel>
             <TextBlock IsVisible="{Binding Loading}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Text="Загрузка..." />
-            
+
             <ListBox IsVisible="{Binding !Loading}"
                      Items="{Binding ActiveWorlds}"
                      SelectedItem="{Binding SelectedWorld}">

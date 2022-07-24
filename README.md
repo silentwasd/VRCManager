@@ -17,12 +17,12 @@
 
 ### Статус World Manager
 
-В разработке. Текущая версия - 0.4.
+В разработке. Текущая версия - 0.5.
 
 Ссылки:
 
 * [Trello](https://trello.com/b/pbnX5kb6/vrc-manager)
-* [Последняя сборка](https://github.com/silentwasd/VRCManager/releases/tag/alpha-manager-0.4)
+* [Последняя сборка](https://github.com/silentwasd/VRCManager/releases/tag/vrc-world-manager-alpha-0.5)
 
 ### Статус User Manager
 

@@ -18,32 +18,32 @@ public class CatalogViewModel : ViewModelBase
 
     private readonly WorldsApi _worldsApi;
 
+    private int _counter;
+
+    private bool _featured;
+
+    private bool _loading;
+
+    private int _offset;
+
+    private bool _quest;
+
+    private string _search = "";
+
     private CatalogWorldViewModel? _selectedWorld;
 
     private CatalogSelectionViewModel? _selection;
 
-    private string _search = "";
-
     private KeyValuePair<string, string> _sort;
-
-    private bool _quest;
-
-    private bool _featured;
-
-    private int _offset;
-
-    private bool _loading;
-
-    private int _counter;
 
     public CatalogViewModel()
     {
         _worldsApi = new WorldsApi(new Configuration());
-        Reset = ReactiveCommand.Create(() => {});
-        Back = ReactiveCommand.Create(() => {});
-        Next = ReactiveCommand.Create(() => {});
+        Reset = ReactiveCommand.Create(() => { });
+        Back = ReactiveCommand.Create(() => { });
+        Next = ReactiveCommand.Create(() => { });
     }
-    
+
     public CatalogViewModel(Configuration apiConfig)
     {
         _worldsApi = new WorldsApi(apiConfig);
@@ -81,48 +81,18 @@ public class CatalogViewModel : ViewModelBase
             Offset = 0;
             LoadFoundWorlds();
         });
-        
+
         Back = ReactiveCommand.Create(() =>
         {
             Offset -= Count;
             LoadFoundWorlds();
         }, backAvailable);
-        
+
         Next = ReactiveCommand.Create(() =>
         {
             Offset += Count;
             LoadFoundWorlds();
         }, nextAvailable);
-    }
-    
-    private async void LoadFoundWorlds()
-    {
-        Loading = true;
-        
-        var response = await _worldsApi.SearchWorldsWithHttpInfoAsync(search: Search, featured: Featured ? "True" : null,
-            sort: Sort.Key, platform: Quest ? "android" : "", n: Count, offset: Offset);
-
-        var worlds = JsonConvert.DeserializeObject<List<LimitedWorld>>(response.RawContent);
-
-        ActiveWorlds.Clear();
-
-        foreach (var world in worlds)
-        {
-            var item = new CatalogWorldViewModel(world);
-            ActiveWorlds.Add(item);
-        }
-
-        Loading = false;
-        
-        LoadWorldThumbnails();
-    }
-
-    private void LoadWorldThumbnails()
-    {
-        foreach (var item in ActiveWorlds)
-        {
-            Task.Run(item.LoadThumbnail);
-        }
     }
 
     public ObservableCollection<CatalogWorldViewModel> ActiveWorlds { get; } = new();
@@ -144,19 +114,19 @@ public class CatalogViewModel : ViewModelBase
         get => _search;
         set => this.RaiseAndSetIfChanged(ref _search, value);
     }
-    
+
     public bool Featured
     {
         get => _featured;
         set => this.RaiseAndSetIfChanged(ref _featured, value);
     }
-    
+
     public KeyValuePair<string, string> Sort
     {
         get => _sort;
         set => this.RaiseAndSetIfChanged(ref _sort, value);
     }
-    
+
     public bool Quest
     {
         get => _quest;
@@ -165,18 +135,18 @@ public class CatalogViewModel : ViewModelBase
 
     public Dictionary<string, string> SortList => new()
     {
-        { "popularity", "популярность" },
-        { "heat", "тренд" },
-        { "trust", "доверие" },
-        { "shuffle", "смешанно" },
-        { "random", "случайно" },
-        { "favorites", "избранное" },
-        { "publicationDate", "дата публикации" },
-        { "labsPublicationDate", "дата публикации в лаборатории" },
-        { "order", "порядок" },
-        { "relevance", "релевантность" },
-        { "magic", "магия" },
-        { "name", "название" }
+        {"popularity", "популярность"},
+        {"heat", "тренд"},
+        {"trust", "доверие"},
+        {"shuffle", "смешанно"},
+        {"random", "случайно"},
+        {"favorites", "избранное"},
+        {"publicationDate", "дата публикации"},
+        {"labsPublicationDate", "дата публикации в лаборатории"},
+        {"order", "порядок"},
+        {"relevance", "релевантность"},
+        {"magic", "магия"},
+        {"name", "название"}
     };
 
     private int Offset
@@ -198,8 +168,39 @@ public class CatalogViewModel : ViewModelBase
     }
 
     public ReactiveCommand<Unit, Unit> Reset { get; }
-    
+
     public ReactiveCommand<Unit, Unit> Back { get; }
 
     public ReactiveCommand<Unit, Unit> Next { get; }
+
+    private async void LoadFoundWorlds()
+    {
+        Loading = true;
+
+        var response = await _worldsApi.SearchWorldsWithHttpInfoAsync(search: Search,
+            featured: Featured ? "True" : null,
+            sort: Sort.Key, platform: Quest ? "android" : "", n: Count, offset: Offset);
+
+        var worlds = JsonConvert.DeserializeObject<List<LimitedWorld>>(response.RawContent);
+
+        ActiveWorlds.Clear();
+
+        foreach (var world in worlds)
+        {
+            var item = new CatalogWorldViewModel(world);
+            ActiveWorlds.Add(item);
+        }
+
+        Loading = false;
+
+        LoadWorldThumbnails();
+    }
+
+    private void LoadWorldThumbnails()
+    {
+        foreach (var item in ActiveWorlds)
+        {
+            Task.Run(item.LoadThumbnail);
+        }
+    }
 }

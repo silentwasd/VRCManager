@@ -1,24 +1,35 @@
 ﻿using System;
 using Avalonia;
+using DynamicData;
+using ReactiveUI;
 using WorldManager.Services;
 
 namespace WorldManager.ViewModels;
 
 public class SavedSelectionViewModel : ViewModelBase
 {
-    public event Action Removed;
-    
+    private string _newGroup;
+
     public SavedSelectionViewModel()
     {
         Item = new SavedWorldViewModel();
     }
-    
+
     public SavedSelectionViewModel(SavedWorldViewModel item)
     {
         Item = item;
+        _newGroup = item.World.Group ?? "";
     }
 
     public SavedWorldViewModel Item { get; }
+
+    public string NewGroup
+    {
+        get => _newGroup;
+        set => this.RaiseAndSetIfChanged(ref _newGroup, value);
+    }
+
+    public event Action Removed;
 
     public async void CopyName()
     {
@@ -30,6 +41,14 @@ public class SavedSelectionViewModel : ViewModelBase
     {
         AppCompose.DbRepository.Worlds.Remove(Item.World);
         AppCompose.DbRepository.Save();
+
         Removed.Invoke();
+    }
+
+    public void SetGroup()
+    {
+        Item.World.Group = string.IsNullOrWhiteSpace(NewGroup) ? null : NewGroup;
+        AppCompose.DbRepository.Worlds.AddOrUpdate(Item.World);
+        AppCompose.DbRepository.Save();
     }
 }

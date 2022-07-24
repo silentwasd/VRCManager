@@ -10,25 +10,25 @@ namespace WorldManager.ViewModels;
 
 public class AuthViewModel : ViewModelBase
 {
+    private Configuration? _apiConfig;
     private bool _authorized;
 
     private CurrentUser? _currentUser;
 
-    private Configuration? _apiConfig;
-    
-    private string _username = "";
+    private string _errorString = "";
 
     private string _password = "";
 
-    private string _errorString = "";
-    
+    private string _username = "";
+
     public AuthViewModel()
     {
         var canEnter = this.WhenAnyValue(x => x.Username,
             y => y.Password,
             (x, y) => x?.Length > 0 && y?.Length > 0);
 
-        Enter = ReactiveCommand.Create(() => {
+        Enter = ReactiveCommand.Create(() =>
+        {
             try
             {
                 ApiConfig = new Configuration
@@ -72,7 +72,7 @@ public class AuthViewModel : ViewModelBase
         get => _username;
         set => this.RaiseAndSetIfChanged(ref _username, value);
     }
-    
+
     public string Password
     {
         get => _password;
@@ -90,7 +90,7 @@ public class AuthViewModel : ViewModelBase
         get => _errorString;
         set => this.RaiseAndSetIfChanged(ref _errorString, value);
     }
-    
+
     public CurrentUser? CurrentUser
     {
         get => _currentUser;

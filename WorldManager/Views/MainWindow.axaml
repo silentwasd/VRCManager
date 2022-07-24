@@ -10,29 +10,30 @@
         Title="WorldManager">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
     <DockPanel>
         <views:NavigationView IsVisible="{Binding !IsAuthView}"
                               DockPanel.Dock="Left"
                               Width="180" />
-        
+
         <Panel>
             <Panel IsVisible="{Binding IsAuthView}" Margin="20">
-                <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" />
+                <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center"
+                                VerticalAlignment="Center" Width="400" />
             </Panel>
-            
+
             <Panel IsVisible="{Binding IsCatalogView}">
                 <DockPanel>
                     <views:CatalogView DataContext="{Binding CatalogViewModel}" />
                 </DockPanel>
             </Panel>
-            
+
             <Panel IsVisible="{Binding IsSavedView}">
                 <views:SavedWorldsView DataContext="{Binding SavedWorldsViewModel}" />
             </Panel>
-            
+
             <Panel IsVisible="{Binding IsTestView}">
                 <views:TestView DataContext="{Binding TestViewModel}" />
             </Panel>

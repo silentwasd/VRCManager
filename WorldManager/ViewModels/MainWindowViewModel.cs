@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using ReactiveUI;
 
@@ -7,54 +6,59 @@ namespace WorldManager.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private AuthViewModel _authViewModel = new();
-        
-        private CatalogViewModel? _catalogViewModel;
+        private readonly ObservableAsPropertyHelper<bool> _isAuthView;
 
-        private SavedWorldsViewModel? _savedWorldsViewModel;
-        
-        private TestViewModel? _testViewModel;
+        private readonly ObservableAsPropertyHelper<bool> _isCatalogView;
+
+        private readonly ObservableAsPropertyHelper<bool> _isSavedView;
+
+        private readonly ObservableAsPropertyHelper<bool> _isTestView;
+        private AuthViewModel _authViewModel = new();
+
+        private CatalogViewModel? _catalogViewModel;
 
         private string _currentView = "";
 
-        private readonly ObservableAsPropertyHelper<bool> _isAuthView;
-        
-        private readonly ObservableAsPropertyHelper<bool> _isCatalogView;
-        
-        private readonly ObservableAsPropertyHelper<bool> _isSavedView;
-        
-        private readonly ObservableAsPropertyHelper<bool> _isTestView;
+        private SavedWorldsViewModel? _savedWorldsViewModel;
+
+        private TestViewModel? _testViewModel;
 
         public MainWindowViewModel()
         {
             CurrentView = "auth";
-            
+
             this.WhenAnyValue(x => x.AuthViewModel.Authorized)
                 .Subscribe(x =>
                 {
-                    CatalogViewModel = x && AuthViewModel.ApiConfig != null ? new CatalogViewModel(AuthViewModel.ApiConfig) : null;
-                    SavedWorldsViewModel = x && AuthViewModel.ApiConfig != null ? new SavedWorldsViewModel(AuthViewModel.ApiConfig) : null;
-                    TestViewModel = x && AuthViewModel.ApiConfig != null ? new TestViewModel(AuthViewModel.ApiConfig) : null;
+                    CatalogViewModel = x && AuthViewModel.ApiConfig != null
+                        ? new CatalogViewModel(AuthViewModel.ApiConfig)
+                        : null;
+                    SavedWorldsViewModel = x && AuthViewModel.ApiConfig != null
+                        ? new SavedWorldsViewModel(AuthViewModel.ApiConfig)
+                        : null;
+                    TestViewModel = x && AuthViewModel.ApiConfig != null
+                        ? new TestViewModel(AuthViewModel.ApiConfig)
+                        : null;
 
                     if (CatalogViewModel != null)
                         CurrentView = "catalog";
                 });
-            
+
             _isAuthView = this
                 .WhenAnyValue(x => x.CurrentView)
                 .Select(x => x == "auth")
                 .ToProperty(this, x => x.IsAuthView);
-            
+
             _isCatalogView = this
                 .WhenAnyValue(x => x.CurrentView)
                 .Select(x => x == "catalog")
                 .ToProperty(this, x => x.IsCatalogView);
-            
+
             _isSavedView = this
                 .WhenAnyValue(x => x.CurrentView)
                 .Select(x => x == "saved")
                 .ToProperty(this, x => x.IsSavedView);
-            
+
             _isTestView = this
                 .WhenAnyValue(x => x.CurrentView)
                 .Select(x => x == "test")
@@ -78,7 +82,7 @@ namespace WorldManager.ViewModels
             get => _savedWorldsViewModel;
             set => this.RaiseAndSetIfChanged(ref _savedWorldsViewModel, value);
         }
-        
+
         public TestViewModel? TestViewModel
         {
             get => _testViewModel;
@@ -99,13 +103,13 @@ namespace WorldManager.ViewModels
                 {
                     case "catalog":
                         return CatalogViewModel;
-                    
+
                     case "saved":
                         return SavedWorldsViewModel;
-                    
+
                     case "test":
                         return TestViewModel;
-                    
+
                     default:
                         return AuthViewModel;
                 }

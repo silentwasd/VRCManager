@@ -5,60 +5,60 @@
              xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="192"
              x:Class="WorldManager.Views.CatalogWorldView">
-    
+
     <Design.DataContext>
         <viewModels:CatalogWorldViewModel />
     </Design.DataContext>
-    
+
     <StackPanel Orientation="Horizontal" Width="500" ToolTip.Tip="{Binding World.Name}">
         <Panel Background="White">
             <Image Width="256" Height="192" Source="{Binding Thumbnail}" />
         </Panel>
-        
+
         <StackPanel Margin="10,0">
             <TextBlock FontSize="20" FontWeight="Bold"
-                       Text="{Binding World.Name}"></TextBlock>
-            
+                       Text="{Binding World.Name}" />
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Автор:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding World.AuthorName}"></TextBlock>
+                           Text="{Binding World.AuthorName}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Дата публикации:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding PublicationDateFormat}"></TextBlock>
+                           Text="{Binding PublicationDateFormat}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Дата обновления:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding UpdateDateFormat}"></TextBlock>
+                           Text="{Binding UpdateDateFormat}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Популярность:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding World.Popularity}"></TextBlock>
+                           Text="{Binding World.Popularity}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Тренд:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding World.Heat}"></TextBlock>
+                           Text="{Binding World.Heat}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Активных:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding World.Occupants}"></TextBlock>
+                           Text="{Binding World.Occupants}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Вместимость:</TextBlock>
                 <TextBlock Margin="5, 0, 0, 0"
-                           Text="{Binding World.Capacity}"></TextBlock>
+                           Text="{Binding World.Capacity}" />
             </StackPanel>
         </StackPanel>
     </StackPanel>

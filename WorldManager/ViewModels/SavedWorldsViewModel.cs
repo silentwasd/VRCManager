@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using VRChat.API.Api;
 using VRChat.API.Client;
@@ -11,27 +12,49 @@ namespace WorldManager.ViewModels;
 
 public class SavedWorldsViewModel : ViewModelBase
 {
+    private readonly ReadOnlyObservableCollection<GroupViewModel> _groups;
     private readonly WorldsApi _worldsApi;
-    
+
     private SavedWorldViewModel? _selectedWorld;
-    
+
     private SavedSelectionViewModel? _selection;
 
     public SavedWorldsViewModel()
     {
         _worldsApi = new WorldsApi(new Configuration());
-        Items.AddRange(new []
+
+        _groups = new ReadOnlyObservableCollection<GroupViewModel>(new ObservableCollection<GroupViewModel>(new[]
         {
-            new SavedWorldViewModel(),
-            new SavedWorldViewModel(),
-            new SavedWorldViewModel()
-        });
+            new GroupViewModel(),
+            new GroupViewModel(),
+            new GroupViewModel()
+        }));
     }
-    
+
     public SavedWorldsViewModel(Configuration apiConfig)
     {
         _worldsApi = new WorldsApi(apiConfig);
-        
+
+        AppCompose.DbRepository.Worlds
+            .Connect()
+            .Transform(x =>
+            {
+                x.Group ??= "_";
+                return x;
+            })
+            .Group(x => x.Group ?? "_")
+            .Transform(x =>
+            {
+                var group = new GroupViewModel(x, this);
+                group.WorldSelected += (world) => SelectedWorld = world;
+                return group;
+            })
+            .Sort(SortExpressionComparer<GroupViewModel>.Ascending(x => x.Group))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _groups)
+            .DisposeMany()
+            .Subscribe();
+
         this.WhenAnyValue(x => x.SelectedWorld)
             .Subscribe(x =>
             {
@@ -42,48 +65,21 @@ public class SavedWorldsViewModel : ViewModelBase
                 }
 
                 Selection = new(x);
-                Selection.Removed += () =>
-                {
-                    Items.Remove(SelectedWorld);
-                    SelectedWorld = null;
-                };
+                Selection.Removed += () => { SelectedWorld = null; };
             });
-
-        LoadWorlds();
     }
-    
-    public ObservableCollection<SavedWorldViewModel> Items { get; } = new();
+
+    public ReadOnlyObservableCollection<GroupViewModel> Groups => _groups;
 
     public SavedWorldViewModel? SelectedWorld
     {
         get => _selectedWorld;
         set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
     }
-    
+
     public SavedSelectionViewModel? Selection
     {
         get => _selection;
         set => this.RaiseAndSetIfChanged(ref _selection, value);
-    }
-
-    private void LoadWorlds()
-    {
-        Items.Clear();
-        
-        foreach (var world in AppCompose.DbRepository.Worlds)
-            Items.Add(new SavedWorldViewModel(world));
-        
-        LoadWorldThumbnails();
-    }
-
-    private void LoadWorldThumbnails()
-    {
-        foreach (var item in Items)
-            Task.Run(item.LoadThumbnail);
-    }
-
-    public override void NavTrigger()
-    {
-        LoadWorlds();
     }
 }

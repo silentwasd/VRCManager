@@ -18,7 +18,7 @@ public static class AppCompose
             return config;
         }
     }
-    
+
     public static DbRepository DbRepository
     {
         get

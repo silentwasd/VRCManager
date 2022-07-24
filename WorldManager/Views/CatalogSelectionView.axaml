@@ -5,27 +5,52 @@
              xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
              x:Class="WorldManager.Views.CatalogSelectionView">
-    
+
     <Design.DataContext>
         <viewModels:CatalogSelectionViewModel />
     </Design.DataContext>
-    
+
     <StackPanel Margin="10" Spacing="10">
         <Image Source="{Binding Item.Thumbnail}" />
-        
+
         <TextBlock FontSize="24"
                    FontWeight="Bold"
                    TextWrapping="Wrap"
-                   Text="{Binding Item.World.Name}"></TextBlock>
-        
+                   Text="{Binding Item.World.Name}" />
+
         <Button HorizontalAlignment="Stretch"
                 Content="Скопировать название"
                 Command="{Binding CopyName}" />
-        
-        <Button HorizontalAlignment="Stretch"
+
+        <Button IsVisible="{Binding Saved}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
                 Content="Сохранить мир"
-                IsEnabled="{Binding !Saved}"
-                Command="{Binding SaveWorld}" />
+                IsEnabled="False" />
+
+        <DockPanel IsVisible="{Binding !Saved}">
+            <Button HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Content="Сохранить мир"
+                    IsEnabled="True"
+                    Command="{Binding SaveWorld}" />
+
+            <StackPanel Spacing="10"
+                        Margin="10, 0, 0, 0"
+                        DockPanel.Dock="Right">
+                <TextBox Watermark="Название группы"
+                         Text="{Binding Group}" />
+
+                <Border IsVisible="{Binding IsGroupsVisible}"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                    <ListBox Items="{Binding Groups}"
+                             SelectionChanged="OnGroupSelected"
+                             Background="Transparent" />
+                </Border>
+            </StackPanel>
+        </DockPanel>
     </StackPanel>
-    
+
 </UserControl>

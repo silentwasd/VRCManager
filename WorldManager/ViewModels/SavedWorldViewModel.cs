@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Newtonsoft.Json;
@@ -17,12 +18,14 @@ namespace WorldManager.ViewModels;
 public class SavedWorldViewModel : ViewModelBase
 {
     private Bitmap? _thumbnail;
-    
+
+    private IBrush _worldBackground = Brushes.Transparent;
+
     public SavedWorldViewModel()
     {
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         var worldStream = assets?.Open(new Uri("avares://WorldManager/Assets/default_world.json"));
-        
+
         if (worldStream == null)
         {
             World = World.FromLimited(new LimitedWorld());
@@ -32,11 +35,32 @@ public class SavedWorldViewModel : ViewModelBase
         var worldData = new StreamReader(worldStream).ReadToEnd();
         World = World.FromLimited(JsonConvert.DeserializeObject<LimitedWorld>(worldData));
     }
-    
-    public SavedWorldViewModel(World world)
+
+    public SavedWorldViewModel(World world, SavedWorldsViewModel parent)
     {
         World = world;
+        Parent = parent;
+
+        Parent.WhenAnyValue(x => x.SelectedWorld)
+            .Subscribe(selectedWorld =>
+            {
+                if (selectedWorld == null || selectedWorld.World.Id != World.Id)
+                {
+                    WorldBackground = Brush.Parse("#d9ebfc");
+                    return;
+                }
+
+                WorldBackground = Brush.Parse("#3675b3");
+            });
     }
+
+    public IBrush WorldBackground
+    {
+        get => _worldBackground;
+        set => this.RaiseAndSetIfChanged(ref _worldBackground, value);
+    }
+
+    private SavedWorldsViewModel Parent { get; }
 
     public World World { get; }
 
@@ -56,7 +80,7 @@ public class SavedWorldViewModel : ViewModelBase
         else
         {
             var response = AppCompose.HttpClient.GetAsync(World.ThumbnailImageUrl);
-            
+
             if (response.Result.StatusCode != HttpStatusCode.OK)
             {
                 var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
@@ -68,9 +92,9 @@ public class SavedWorldViewModel : ViewModelBase
 
             if (!Directory.Exists("images"))
                 Directory.CreateDirectory("images");
-            
+
             await File.WriteAllBytesAsync("images/" + id + ".bmp", data);
-            
+
             return new MemoryStream(data);
         }
     }

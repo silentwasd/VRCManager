@@ -9,8 +9,9 @@ public class Config
 
     public static Config Load()
     {
-        return !File.Exists("./config.json") ? new Config() : 
-            JsonConvert.DeserializeObject<Config>(File.ReadAllText("./config.json"));
+        return !File.Exists("./config.json")
+            ? new Config()
+            : JsonConvert.DeserializeObject<Config>(File.ReadAllText("./config.json"));
     }
 
     public void Save()

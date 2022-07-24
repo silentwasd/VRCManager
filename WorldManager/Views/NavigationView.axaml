@@ -5,23 +5,23 @@
              xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
              mc:Ignorable="d" d:DesignWidth="180" d:DesignHeight="300"
              x:Class="WorldManager.Views.NavigationView">
-    
+
     <Design.DataContext>
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
-    
+
     <Panel Background="#77a1c9">
         <StackPanel Margin="10" Spacing="10">
             <Button Content="Каталог" HorizontalAlignment="Stretch"
                     Command="{Binding SelectView}"
                     CommandParameter="catalog"
                     Background="White" />
-        
+
             <Button Content="Сохраненные миры" HorizontalAlignment="Stretch"
                     Command="{Binding SelectView}"
                     CommandParameter="saved"
                     Background="White" />
-        
+
             <Button Content="Тест" HorizontalAlignment="Stretch"
                     Command="{Binding SelectView}"
                     CommandParameter="test"
