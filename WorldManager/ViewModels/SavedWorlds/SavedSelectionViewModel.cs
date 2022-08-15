@@ -3,8 +3,10 @@ using Avalonia;
 using DynamicData;
 using ReactiveUI;
 using WorldManager.Services;
+using WorldManager.ViewModels.WorldDetails;
+using WorldManager.Views.WorldDetails;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.SavedWorlds;
 
 public class SavedSelectionViewModel : ViewModelBase
 {
@@ -50,5 +52,11 @@ public class SavedSelectionViewModel : ViewModelBase
         Item.World.Group = string.IsNullOrWhiteSpace(NewGroup) ? null : NewGroup;
         AppCompose.DbRepository.Worlds.AddOrUpdate(Item.World);
         AppCompose.DbRepository.Save();
+    }
+
+    public void Details()
+    {
+        AppCompose.MainWindow?.SetView(new WorldView(),
+            new WorldViewModel(AppCompose.MainWindow.ApiConfig, Item.World.Id));
     }
 }

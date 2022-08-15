@@ -10,7 +10,7 @@ using VRChat.API.Api;
 using VRChat.API.Client;
 using VRChat.API.Model;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.Catalog;
 
 public class CatalogViewModel : ViewModelBase
 {
@@ -52,7 +52,7 @@ public class CatalogViewModel : ViewModelBase
         Quest = false;
 
         this.WhenAnyValue(x => x.Search, x => x.Featured, x => x.Sort, x => x.Quest,
-                (_, _, sort, _) => sort.Key != String.Empty)
+                (_, _, sort, _) => sort.Key != string.Empty)
             .Throttle(TimeSpan.FromSeconds(1))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(_ =>
@@ -65,7 +65,7 @@ public class CatalogViewModel : ViewModelBase
             .Subscribe(x =>
             {
                 if (x != null)
-                    Selection = new(x);
+                    Selection = new CatalogSelectionViewModel(x);
             });
 
         var backAvailable = this.WhenAnyValue(x => x.Offset,
@@ -198,9 +198,6 @@ public class CatalogViewModel : ViewModelBase
 
     private void LoadWorldThumbnails()
     {
-        foreach (var item in ActiveWorlds)
-        {
-            Task.Run(item.LoadThumbnail);
-        }
+        foreach (var item in ActiveWorlds) Task.Run(item.LoadThumbnail);
     }
 }

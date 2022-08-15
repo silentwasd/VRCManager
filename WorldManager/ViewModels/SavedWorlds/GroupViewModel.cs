@@ -7,7 +7,7 @@ using DynamicData.Alias;
 using ReactiveUI;
 using WorldManager.Services.Db;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.SavedWorlds;
 
 public class GroupViewModel : ViewModelBase
 {

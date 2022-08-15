@@ -1,11 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace WorldManager.Views;
+namespace WorldManager.Views.Catalog;
 
-public partial class CatalogView : UserControl
+public partial class CatalogWorldView : UserControl
 {
-    public CatalogView()
+    public CatalogWorldView()
     {
         InitializeComponent();
     }

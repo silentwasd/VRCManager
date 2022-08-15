@@ -2,12 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
+             xmlns:catalog="clr-namespace:WorldManager.ViewModels.Catalog"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="192"
-             x:Class="WorldManager.Views.CatalogWorldView">
+             x:Class="WorldManager.Views.Catalog.CatalogWorldView">
 
     <Design.DataContext>
-        <viewModels:CatalogWorldViewModel />
+        <catalog:CatalogWorldViewModel />
     </Design.DataContext>
 
     <StackPanel Orientation="Horizontal" Width="500" ToolTip.Tip="{Binding World.Name}">

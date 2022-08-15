@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
+using WorldManager.ViewModels;
 
 namespace WorldManager.Services;
 
@@ -8,6 +9,8 @@ public static class AppCompose
     private static Config? _config;
 
     private static DbRepository? _dbRepository;
+
+    public static MainWindowViewModel? MainWindow { get; set; }
 
     public static Config Config
     {

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Media.Imaging;
@@ -9,9 +8,8 @@ using Newtonsoft.Json;
 using ReactiveUI;
 using VRChat.API.Model;
 using WorldManager.Services;
-using File = System.IO.File;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.Catalog;
 
 public class CatalogWorldViewModel : ViewModelBase
 {
@@ -53,9 +51,9 @@ public class CatalogWorldViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _json, value);
     }
 
-    public DateTime? PublicationDate => World.PublicationDate == "none" ? null : DateTime.Parse(World.PublicationDate);
+    private DateTime? PublicationDate => World.PublicationDate == "none" ? null : DateTime.Parse(World.PublicationDate);
 
-    public DateTime UpdateDate => World.UpdatedAt;
+    private DateTime UpdateDate => World.UpdatedAt;
 
     public string PublicationDateFormat
     {
@@ -68,38 +66,17 @@ public class CatalogWorldViewModel : ViewModelBase
 
     public string UpdateDateFormat => UpdateDate.ToShortDateString();
 
-    private async Task<Stream> LoadThumbnailBitmap()
+    public async Task LoadThumbnail()
     {
-        var id = World.Id;
-        if (File.Exists("images/" + id + ".bmp"))
-        {
-            return new MemoryStream(await File.ReadAllBytesAsync("images/" + id + ".bmp"));
-        }
-        else
-        {
-            var response = AppCompose.HttpClient.GetAsync(World.ThumbnailImageUrl);
-
-            if (response.Result.StatusCode != HttpStatusCode.OK)
+        await using var stream = await WorksWithUrlImage.LoadImageFromUrl(
+            World.ThumbnailImageUrl, World.Id + ".bmp",
+            new Task<Stream>(() =>
             {
                 var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
                 return assets?.Open(new Uri("avares://WorldManager/Assets/default_world_thumb.png")) ??
                        new MemoryStream();
-            }
-
-            var data = await response.Result.Content.ReadAsByteArrayAsync();
-
-            if (!Directory.Exists("images"))
-                Directory.CreateDirectory("images");
-
-            await File.WriteAllBytesAsync("images/" + id + ".bmp", data);
-
-            return new MemoryStream(data);
-        }
-    }
-
-    public async Task LoadThumbnail()
-    {
-        await using var stream = await LoadThumbnailBitmap();
+            })
+        );
         Thumbnail = await Task.Run(() => Bitmap.DecodeToWidth(stream, 256));
     }
 }

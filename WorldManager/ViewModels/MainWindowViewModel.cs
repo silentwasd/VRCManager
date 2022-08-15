@@ -1,133 +1,88 @@
 ﻿using System;
-using System.Reactive.Linq;
+using System.Linq;
 using ReactiveUI;
+using VRChat.API.Client;
+using WorldManager.ViewModels.Catalog;
+using WorldManager.ViewModels.Navigation;
+using WorldManager.ViewModels.SavedWorlds;
+using WorldManager.Views;
+using WorldManager.Views.Catalog;
+using WorldManager.Views.SavedWorlds;
 
-namespace WorldManager.ViewModels
+namespace WorldManager.ViewModels;
+
+public class MainWindowViewModel : ViewModelBase
 {
-    public class MainWindowViewModel : ViewModelBase
+    private Configuration? _apiConfig;
+    private AuthViewModel _authViewModel = new();
+
+    private object _currentView;
+
+    private ViewModelBase _currentViewContext;
+
+    private NavItem[] _navItems;
+
+    public MainWindowViewModel()
     {
-        private readonly ObservableAsPropertyHelper<bool> _isAuthView;
-
-        private readonly ObservableAsPropertyHelper<bool> _isCatalogView;
-
-        private readonly ObservableAsPropertyHelper<bool> _isSavedView;
-
-        private readonly ObservableAsPropertyHelper<bool> _isTestView;
-        private AuthViewModel _authViewModel = new();
-
-        private CatalogViewModel? _catalogViewModel;
-
-        private string _currentView = "";
-
-        private SavedWorldsViewModel? _savedWorldsViewModel;
-
-        private TestViewModel? _testViewModel;
-
-        public MainWindowViewModel()
-        {
-            CurrentView = "auth";
-
-            this.WhenAnyValue(x => x.AuthViewModel.Authorized)
-                .Subscribe(x =>
-                {
-                    CatalogViewModel = x && AuthViewModel.ApiConfig != null
-                        ? new CatalogViewModel(AuthViewModel.ApiConfig)
-                        : null;
-                    SavedWorldsViewModel = x && AuthViewModel.ApiConfig != null
-                        ? new SavedWorldsViewModel(AuthViewModel.ApiConfig)
-                        : null;
-                    TestViewModel = x && AuthViewModel.ApiConfig != null
-                        ? new TestViewModel(AuthViewModel.ApiConfig)
-                        : null;
-
-                    if (CatalogViewModel != null)
-                        CurrentView = "catalog";
-                });
-
-            _isAuthView = this
-                .WhenAnyValue(x => x.CurrentView)
-                .Select(x => x == "auth")
-                .ToProperty(this, x => x.IsAuthView);
-
-            _isCatalogView = this
-                .WhenAnyValue(x => x.CurrentView)
-                .Select(x => x == "catalog")
-                .ToProperty(this, x => x.IsCatalogView);
-
-            _isSavedView = this
-                .WhenAnyValue(x => x.CurrentView)
-                .Select(x => x == "saved")
-                .ToProperty(this, x => x.IsSavedView);
-
-            _isTestView = this
-                .WhenAnyValue(x => x.CurrentView)
-                .Select(x => x == "test")
-                .ToProperty(this, x => x.IsTestView);
-        }
-
-        public AuthViewModel AuthViewModel
-        {
-            get => _authViewModel;
-            set => this.RaiseAndSetIfChanged(ref _authViewModel, value);
-        }
-
-        public CatalogViewModel? CatalogViewModel
-        {
-            get => _catalogViewModel;
-            set => this.RaiseAndSetIfChanged(ref _catalogViewModel, value);
-        }
-
-        public SavedWorldsViewModel? SavedWorldsViewModel
-        {
-            get => _savedWorldsViewModel;
-            set => this.RaiseAndSetIfChanged(ref _savedWorldsViewModel, value);
-        }
-
-        public TestViewModel? TestViewModel
-        {
-            get => _testViewModel;
-            set => this.RaiseAndSetIfChanged(ref _testViewModel, value);
-        }
-
-        private string CurrentView
-        {
-            get => _currentView;
-            set => this.RaiseAndSetIfChanged(ref _currentView, value);
-        }
-
-        private ViewModelBase CurrentViewModel
-        {
-            get
+        this.WhenAnyValue(x => x.AuthViewModel.Authorized)
+            .Subscribe(x =>
             {
-                switch (CurrentView)
+                if (AuthViewModel.ApiConfig == null)
+                    return;
+
+                ApiConfig = AuthViewModel.ApiConfig;
+
+                NavItems = new[]
                 {
-                    case "catalog":
-                        return CatalogViewModel;
+                    new NavItem("Каталог", new CatalogView(), new CatalogViewModel(ApiConfig)),
+                    new NavItem("Сохраненные миры", new SavedWorldsView(), new SavedWorldsViewModel(ApiConfig)),
+                    new NavItem("Тест", new TestView(), new TestViewModel(ApiConfig))
+                };
 
-                    case "saved":
-                        return SavedWorldsViewModel;
+                SelectView("Каталог");
+            });
+    }
 
-                    case "test":
-                        return TestViewModel;
+    public AuthViewModel AuthViewModel
+    {
+        get => _authViewModel;
+        set => this.RaiseAndSetIfChanged(ref _authViewModel, value);
+    }
 
-                    default:
-                        return AuthViewModel;
-                }
-            }
-        }
+    private object CurrentView
+    {
+        get => _currentView;
+        set => this.RaiseAndSetIfChanged(ref _currentView, value);
+    }
 
-        public bool IsAuthView => _isAuthView.Value;
+    private ViewModelBase CurrentViewContext
+    {
+        get => _currentViewContext;
+        set => this.RaiseAndSetIfChanged(ref _currentViewContext, value);
+    }
 
-        public bool IsCatalogView => _isCatalogView.Value;
+    private NavItem[] NavItems
+    {
+        get => _navItems;
+        set => this.RaiseAndSetIfChanged(ref _navItems, value);
+    }
 
-        public bool IsSavedView => _isSavedView.Value;
+    public Configuration ApiConfig
+    {
+        get => _apiConfig;
+        set => this.RaiseAndSetIfChanged(ref _apiConfig, value);
+    }
 
-        public bool IsTestView => _isTestView.Value;
+    private void SelectView(string view)
+    {
+        var navItem = NavItems.First(nav => nav.Name == view);
 
-        public void SelectView(string view)
-        {
-            CurrentView = view;
-            CurrentViewModel.NavTrigger();
-        }
+        SetView(navItem.Content, navItem.Context);
+    }
+
+    public void SetView(object view, ViewModelBase context)
+    {
+        CurrentView = view;
+        CurrentViewContext = context;
     }
 }

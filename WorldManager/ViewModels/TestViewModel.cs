@@ -74,9 +74,6 @@ public class TestViewModel : ViewModelBase
         var items = JsonConvert.DeserializeObject<List<LimitedWorld>>(response.RawContent);
 
         Response = "";
-        foreach (var item in items)
-        {
-            Response += item.ToJson() + "\n";
-        }
+        foreach (var item in items) Response += item.ToJson() + "\n";
     }
 }

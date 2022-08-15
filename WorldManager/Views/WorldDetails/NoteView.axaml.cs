@@ -1,11 +1,11 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace WorldManager.Views;
+namespace WorldManager.Views.WorldDetails;
 
-public partial class SavedWorldView : UserControl
+public partial class NoteView : UserControl
 {
-    public SavedWorldView()
+    public NoteView()
     {
         InitializeComponent();
     }

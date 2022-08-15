@@ -2,26 +2,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
-             xmlns:views="clr-namespace:WorldManager.Views"
+             xmlns:savedWorlds="clr-namespace:WorldManager.Views.SavedWorlds"
+             xmlns:savedWorlds1="clr-namespace:WorldManager.ViewModels.SavedWorlds"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="WorldManager.Views.SavedWorldsView">
+             x:Class="WorldManager.Views.SavedWorlds.SavedWorldsView">
 
     <Design.DataContext>
-        <viewModels:SavedWorldsViewModel />
+        <savedWorlds1:SavedWorldsViewModel />
     </Design.DataContext>
 
     <DockPanel>
         <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
-            <views:SavedSelectionView Width="300"
-                                      DataContext="{Binding Selection}" />
+            <savedWorlds:SavedSelectionView Width="300"
+                                            DataContext="{Binding Selection}" />
         </Panel>
 
         <ScrollViewer>
             <ItemsRepeater Items="{Binding Groups}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
-                        <views:GroupView />
+                        <savedWorlds:GroupView />
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

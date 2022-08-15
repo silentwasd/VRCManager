@@ -14,28 +14,19 @@
     </Design.DataContext>
 
     <DockPanel>
-        <views:NavigationView IsVisible="{Binding !IsAuthView}"
+        <views:NavigationView IsVisible="{Binding AuthViewModel.Authorized}"
                               DockPanel.Dock="Left"
                               Width="180" />
 
-        <Panel>
-            <Panel IsVisible="{Binding IsAuthView}" Margin="20">
+        <Panel Name="MainPanel">
+            <Panel IsVisible="{Binding !AuthViewModel.Authorized}" Margin="20">
                 <views:AuthView DataContext="{Binding AuthViewModel}" HorizontalAlignment="Center"
                                 VerticalAlignment="Center" Width="400" />
             </Panel>
 
-            <Panel IsVisible="{Binding IsCatalogView}">
-                <DockPanel>
-                    <views:CatalogView DataContext="{Binding CatalogViewModel}" />
-                </DockPanel>
-            </Panel>
-
-            <Panel IsVisible="{Binding IsSavedView}">
-                <views:SavedWorldsView DataContext="{Binding SavedWorldsViewModel}" />
-            </Panel>
-
-            <Panel IsVisible="{Binding IsTestView}">
-                <views:TestView DataContext="{Binding TestViewModel}" />
+            <Panel IsVisible="{Binding AuthViewModel.Authorized}">
+                <UserControl Content="{Binding #MainPanel.DataContext.CurrentView}"
+                             DataContext="{Binding CurrentViewContext}" />
             </Panel>
         </Panel>
     </DockPanel>

@@ -8,21 +8,27 @@ using DynamicData.Alias;
 using ReactiveUI;
 using WorldManager.Services;
 using WorldManager.Services.Db;
+using WorldManager.ViewModels.WorldDetails;
+using WorldManager.Views.WorldDetails;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.Catalog;
 
 public class CatalogSelectionViewModel : ViewModelBase
 {
+    private readonly ReadOnlyObservableCollection<string> _groups;
     private readonly ObservableAsPropertyHelper<bool> _isGroupsVisible;
 
     private string _group;
 
-    private ReadOnlyObservableCollection<string> _groups;
     private bool _saved;
 
     public CatalogSelectionViewModel()
     {
         Item = new CatalogWorldViewModel();
+
+        _group = "";
+
+        _isGroupsVisible = ObservableAsPropertyHelper<bool>.Default();
 
         _groups = new ReadOnlyObservableCollection<string>(new ObservableCollection<string>(new[]
         {
@@ -34,14 +40,14 @@ public class CatalogSelectionViewModel : ViewModelBase
 
     public CatalogSelectionViewModel(CatalogWorldViewModel item)
     {
-        Item = item;
+        _group = "";
 
-        ReadOnlyObservableCollection<World> worlds;
+        Item = item;
 
         AppCompose.DbRepository.Worlds.Connect()
             .Where(x => x.Id == Item.World.Id)
             .ObserveOn(RxApp.MainThreadScheduler)
-            .Bind(out worlds)
+            .Bind(out var worlds)
             .DisposeMany()
             .Subscribe();
 
@@ -100,5 +106,11 @@ public class CatalogSelectionViewModel : ViewModelBase
         AppCompose.DbRepository.Save();
 
         Saved = true;
+    }
+
+    public void Details()
+    {
+        AppCompose.MainWindow?.SetView(new WorldView(),
+            new WorldViewModel(AppCompose.MainWindow.ApiConfig, Item.World.Id));
     }
 }

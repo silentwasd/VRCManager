@@ -1,11 +1,7 @@
 ﻿using ReactiveUI;
 
-namespace WorldManager.ViewModels
+namespace WorldManager.ViewModels;
+
+public class ViewModelBase : ReactiveObject
 {
-    public class ViewModelBase : ReactiveObject
-    {
-        public virtual void NavTrigger()
-        {
-        }
-    }
 }

@@ -1,0 +1,138 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:WorldManager.ViewModels.WorldDetails"
+             xmlns:worldDetails="clr-namespace:WorldManager.Views.WorldDetails"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
+             x:Class="WorldManager.Views.WorldDetails.WorldView">
+
+    <Design.DataContext>
+        <viewModels:WorldViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <Panel DockPanel.Dock="Right" Background="#baddff">
+            <StackPanel Spacing="10" Margin="10" Width="180">
+                <Button Content="Сохранить"
+                        Background="White"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding !Saved}"
+                        Command="{Binding Save}" />
+
+                <Button Content="Удалить"
+                        Background="White"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding Saved}"
+                        Command="{Binding Remove}" />
+
+                <Button Content="Превью на YouTube"
+                        Background="White"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding HasPreviewYoutube}"
+                        Command="{Binding OpenPreviewYoutube}" />
+
+                <TextBlock Text="URL успешно скопирован в буфер обмена!"
+                           TextWrapping="Wrap"
+                           Foreground="DarkGreen"
+                           FontWeight="Bold"
+                           IsVisible="{Binding PreviewYoutubeCopied}" />
+            </StackPanel>
+        </Panel>
+
+        <ScrollViewer>
+            <StackPanel Spacing="20" Margin="10">
+                <DockPanel Height="300">
+                    <Image DockPanel.Dock="Left" Width="400" Height="300"
+                           Source="{Binding Image}" />
+
+                    <StackPanel Spacing="5" Margin="20, 10, 10, 10" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding World.Name}" FontWeight="Bold" FontSize="30" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Автор:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding World.AuthorName}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Дата публикации:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding PublicationDateFormat}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Дата обновления:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding UpdateDateFormat}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Вместимость:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding World.Capacity}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Популярность:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding World.Popularity}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Тренд:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding World.Heat}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Посещений:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding Visits}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" FontSize="20">Добавили в избранное:</TextBlock>
+                            <TextBlock Margin="5, 0, 0, 0" FontSize="20"
+                                       Text="{Binding Favorites}" />
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Описание:" FontWeight="Bold" FontSize="20" />
+
+                    <TextBlock Text="{Binding World.Description}"
+                               FontSize="20" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Теги:" FontWeight="Bold" FontSize="20" />
+
+                    <ItemsRepeater Items="{Binding Tags}">
+                        <ItemsRepeater.Layout>
+                            <WrapLayout HorizontalSpacing="10" VerticalSpacing="10" />
+                        </ItemsRepeater.Layout>
+
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Color}"
+                                        CornerRadius="10"
+                                        Padding="10"
+                                        ToolTip.Tip="{Binding Hint}">
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <worldDetails:NoteView IsVisible="{Binding Saved}" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

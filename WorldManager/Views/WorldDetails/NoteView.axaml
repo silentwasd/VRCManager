@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:worldDetails="clr-namespace:WorldManager.ViewModels.WorldDetails"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
+             x:Class="WorldManager.Views.WorldDetails.NoteView">
+
+    <Design.DataContext>
+        <worldDetails:WorldViewModel />
+    </Design.DataContext>
+
+    <StackPanel Spacing="3">
+        <TextBlock Text="Заметка:" FontWeight="Bold" FontSize="20" />
+
+        <DockPanel>
+            <Button DockPanel.Dock="Right"
+                    VerticalAlignment="Top"
+                    Content="Сохранить"
+                    Command="{Binding SaveNote}"
+                    Margin="10,0, 0, 0" />
+
+            <TextBox AcceptsReturn="True"
+                     Height="200"
+                     TextWrapping="Wrap"
+                     Watermark="Напишите заметку об этом мире здесь..."
+                     Text="{Binding SavedWorld.Note}" />
+        </DockPanel>
+    </StackPanel>
+</UserControl>

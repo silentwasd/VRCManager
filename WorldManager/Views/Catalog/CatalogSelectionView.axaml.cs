@@ -1,8 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using WorldManager.ViewModels;
+using WorldManager.ViewModels.Catalog;
 
-namespace WorldManager.Views;
+namespace WorldManager.Views.Catalog;
 
 public partial class CatalogSelectionView : UserControl
 {

@@ -13,7 +13,7 @@ using WorldManager.Services;
 using File = System.IO.File;
 using World = WorldManager.Services.Db.World;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.SavedWorlds;
 
 public class SavedWorldViewModel : ViewModelBase
 {
@@ -54,7 +54,7 @@ public class SavedWorldViewModel : ViewModelBase
             });
     }
 
-    public IBrush WorldBackground
+    private IBrush WorldBackground
     {
         get => _worldBackground;
         set => this.RaiseAndSetIfChanged(ref _worldBackground, value);
@@ -74,29 +74,25 @@ public class SavedWorldViewModel : ViewModelBase
     {
         var id = World.Id;
         if (File.Exists("images/" + id + ".bmp"))
-        {
             return new MemoryStream(await File.ReadAllBytesAsync("images/" + id + ".bmp"));
-        }
-        else
+
+        var response = AppCompose.HttpClient.GetAsync(World.ThumbnailImageUrl);
+
+        if (response.Result.StatusCode != HttpStatusCode.OK)
         {
-            var response = AppCompose.HttpClient.GetAsync(World.ThumbnailImageUrl);
-
-            if (response.Result.StatusCode != HttpStatusCode.OK)
-            {
-                var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-                return assets?.Open(new Uri("avares://WorldManager/Assets/default_world_thumb.png")) ??
-                       new MemoryStream();
-            }
-
-            var data = await response.Result.Content.ReadAsByteArrayAsync();
-
-            if (!Directory.Exists("images"))
-                Directory.CreateDirectory("images");
-
-            await File.WriteAllBytesAsync("images/" + id + ".bmp", data);
-
-            return new MemoryStream(data);
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            return assets?.Open(new Uri("avares://WorldManager/Assets/default_world_thumb.png")) ??
+                   new MemoryStream();
         }
+
+        var data = await response.Result.Content.ReadAsByteArrayAsync();
+
+        if (!Directory.Exists("images"))
+            Directory.CreateDirectory("images");
+
+        await File.WriteAllBytesAsync("images/" + id + ".bmp", data);
+
+        return new MemoryStream(data);
     }
 
     public async Task LoadThumbnail()

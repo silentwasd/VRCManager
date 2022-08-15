@@ -1,9 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using WorldManager.ViewModels;
+using WorldManager.ViewModels.SavedWorlds;
 
-namespace WorldManager.Views;
+namespace WorldManager.Views.SavedWorlds;
 
 public partial class GroupView : UserControl
 {

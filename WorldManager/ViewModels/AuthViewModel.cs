@@ -91,7 +91,7 @@ public class AuthViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _errorString, value);
     }
 
-    public CurrentUser? CurrentUser
+    private CurrentUser? CurrentUser
     {
         get => _currentUser;
         set => this.RaiseAndSetIfChanged(ref _currentUser, value);
@@ -100,7 +100,7 @@ public class AuthViewModel : ViewModelBase
     public Configuration? ApiConfig
     {
         get => _apiConfig;
-        set => this.RaiseAndSetIfChanged(ref _apiConfig, value);
+        private set => this.RaiseAndSetIfChanged(ref _apiConfig, value);
     }
 
     public ReactiveCommand<Unit, Unit> Enter { get; }

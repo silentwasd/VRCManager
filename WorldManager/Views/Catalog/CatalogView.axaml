@@ -2,13 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
-             xmlns:views="clr-namespace:WorldManager.Views"
+             xmlns:catalog="clr-namespace:WorldManager.Views.Catalog"
+             xmlns:catalog1="clr-namespace:WorldManager.ViewModels.Catalog"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
-             x:Class="WorldManager.Views.CatalogView">
+             x:Class="WorldManager.Views.Catalog.CatalogView">
 
     <Design.DataContext>
-        <viewModels:CatalogViewModel />
+        <catalog1:CatalogViewModel />
     </Design.DataContext>
 
     <DockPanel>
@@ -51,8 +51,8 @@
         </StackPanel>
 
         <Panel IsVisible="{Binding !!Selection}" DockPanel.Dock="Right">
-            <views:CatalogSelectionView Width="300"
-                                        DataContext="{Binding Selection}" />
+            <catalog:CatalogSelectionView Width="300"
+                                          DataContext="{Binding Selection}" />
         </Panel>
 
         <Panel>
@@ -64,6 +64,12 @@
             <ListBox IsVisible="{Binding !Loading}"
                      Items="{Binding ActiveWorlds}"
                      SelectedItem="{Binding SelectedWorld}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <catalog:CatalogWorldView />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel HorizontalAlignment="Center" Margin="0, 10" />

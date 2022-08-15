@@ -1,86 +1,86 @@
 ﻿{
-    "releaseStatus": "public",
-    "authorId": "usr_3d10ca69-6586-40a3-aa1b-a0c9e38a0d20",
-    "authorName": "spookyghostboo",
-    "capacity": 18,
-    "created_at": "2019-05-01T01:19:43.477Z",
-    "favorites": 162352,
-    "heat": 7,
-    "id": "wrld_4cf554b4-430c-4f8f-b53e-1f294eed230b",
-    "imageUrl": "https://api.vrchat.cloud/api/1/file/file_ab2d3af4-c6da-41b9-8a3d-6f554462cfaf/17/file",
-    "labsPublicationDate": "2019-06-13T22:59:46.028Z",
-    "name": "The Black Cat",
-    "occupants": 2348,
-    "organization": "vrchat",
-    "popularity": 9,
-    "publicationDate": "2021-04-18T23:17:33.390Z",
-    "tags": [
-        "author_tag_restaurant",
-        "author_tag_bar",
-        "author_tag_quest",
-        "author_tag_hangout",
-        "system_approved",
-        "author_tag_chill",
-        "admin_approved"
-    ],
-    "thumbnailImageUrl": "https://api.vrchat.cloud/api/1/image/file_ab2d3af4-c6da-41b9-8a3d-6f554462cfaf/17/256",
-    "unityPackages": [
-        {
-            "platform": "android",
-            "unityVersion": "2017.4.15f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2017.4.15f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2017.4.28f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2017.4.28f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2018.4.13f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2018.4.13f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2018.4.20f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2018.4.20f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2019.4.29f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2019.4.29f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2019.4.30f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2019.4.30f1"
-        },
-        {
-            "platform": "android",
-            "unityVersion": "2019.4.31f1"
-        },
-        {
-            "platform": "standalonewindows",
-            "unityVersion": "2019.4.31f1"
-        }
-    ],
-    "updated_at": "2022-06-15T16:19:05.608Z"
+  "releaseStatus": "public",
+  "authorId": "usr_3d10ca69-6586-40a3-aa1b-a0c9e38a0d20",
+  "authorName": "spookyghostboo",
+  "capacity": 18,
+  "created_at": "2019-05-01T01:19:43.477Z",
+  "favorites": 162352,
+  "heat": 7,
+  "id": "wrld_4cf554b4-430c-4f8f-b53e-1f294eed230b",
+  "imageUrl": "https://api.vrchat.cloud/api/1/file/file_ab2d3af4-c6da-41b9-8a3d-6f554462cfaf/17/file",
+  "labsPublicationDate": "2019-06-13T22:59:46.028Z",
+  "name": "The Black Cat",
+  "occupants": 2348,
+  "organization": "vrchat",
+  "popularity": 9,
+  "publicationDate": "2021-04-18T23:17:33.390Z",
+  "tags": [
+    "author_tag_restaurant",
+    "author_tag_bar",
+    "author_tag_quest",
+    "author_tag_hangout",
+    "system_approved",
+    "author_tag_chill",
+    "admin_approved"
+  ],
+  "thumbnailImageUrl": "https://api.vrchat.cloud/api/1/image/file_ab2d3af4-c6da-41b9-8a3d-6f554462cfaf/17/256",
+  "unityPackages": [
+    {
+      "platform": "android",
+      "unityVersion": "2017.4.15f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2017.4.15f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2017.4.28f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2017.4.28f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2018.4.13f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2018.4.13f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2018.4.20f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2018.4.20f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2019.4.29f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2019.4.29f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2019.4.30f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2019.4.30f1"
+    },
+    {
+      "platform": "android",
+      "unityVersion": "2019.4.31f1"
+    },
+    {
+      "platform": "standalonewindows",
+      "unityVersion": "2019.4.31f1"
+    }
+  ],
+  "updated_at": "2022-06-15T16:19:05.608Z"
 }

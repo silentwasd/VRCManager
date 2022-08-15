@@ -1,29 +1,33 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using WorldManager.Services;
 using WorldManager.ViewModels;
 using WorldManager.Views;
 
-namespace WorldManager
+namespace WorldManager;
+
+public class App : Application
 {
-    public partial class App : Application
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        AvaloniaXamlLoader.Load(this);
+    }
 
-        public override void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            var vm = new MainWindowViewModel();
+
+            desktop.MainWindow = new MainWindow
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
-            }
+                DataContext = vm
+            };
 
-            base.OnFrameworkInitializationCompleted();
+            AppCompose.MainWindow = vm;
         }
+
+        base.OnFrameworkInitializationCompleted();
     }
 }

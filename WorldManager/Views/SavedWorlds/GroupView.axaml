@@ -2,13 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:WorldManager.ViewModels"
-             xmlns:views="clr-namespace:WorldManager.Views"
+             xmlns:savedWorlds="clr-namespace:WorldManager.Views.SavedWorlds"
+             xmlns:savedWorlds1="clr-namespace:WorldManager.ViewModels.SavedWorlds"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="WorldManager.Views.GroupView">
+             x:Class="WorldManager.Views.SavedWorlds.GroupView">
 
     <Design.DataContext>
-        <viewModels:GroupViewModel />
+        <savedWorlds1:GroupViewModel />
     </Design.DataContext>
 
     <StackPanel>
@@ -36,7 +36,7 @@
                             Padding="10"
                             CornerRadius="10"
                             PointerPressed="OnGroupSelected">
-                        <views:SavedWorldView />
+                        <savedWorlds:SavedWorldView />
                     </Border>
                 </DataTemplate>
             </ItemsRepeater.ItemTemplate>

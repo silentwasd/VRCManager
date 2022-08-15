@@ -8,11 +8,12 @@ using VRChat.API.Api;
 using VRChat.API.Client;
 using WorldManager.Services;
 
-namespace WorldManager.ViewModels;
+namespace WorldManager.ViewModels.SavedWorlds;
 
 public class SavedWorldsViewModel : ViewModelBase
 {
     private readonly ReadOnlyObservableCollection<GroupViewModel> _groups;
+
     private readonly WorldsApi _worldsApi;
 
     private SavedWorldViewModel? _selectedWorld;
@@ -46,7 +47,7 @@ public class SavedWorldsViewModel : ViewModelBase
             .Transform(x =>
             {
                 var group = new GroupViewModel(x, this);
-                group.WorldSelected += (world) => SelectedWorld = world;
+                group.WorldSelected += world => SelectedWorld = world;
                 return group;
             })
             .Sort(SortExpressionComparer<GroupViewModel>.Ascending(x => x.Group))
@@ -64,7 +65,7 @@ public class SavedWorldsViewModel : ViewModelBase
                     return;
                 }
 
-                Selection = new(x);
+                Selection = new SavedSelectionViewModel(x);
                 Selection.Removed += () => { SelectedWorld = null; };
             });
     }
@@ -74,7 +75,7 @@ public class SavedWorldsViewModel : ViewModelBase
     public SavedWorldViewModel? SelectedWorld
     {
         get => _selectedWorld;
-        set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+        private set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
     }
 
     public SavedSelectionViewModel? Selection

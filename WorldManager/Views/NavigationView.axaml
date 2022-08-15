@@ -10,22 +10,25 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
-    <Panel Background="#77a1c9">
-        <StackPanel Margin="10" Spacing="10">
-            <Button Content="Каталог" HorizontalAlignment="Stretch"
-                    Command="{Binding SelectView}"
-                    CommandParameter="catalog"
-                    Background="White" />
+    <DockPanel Background="#77a1c9" Name="NavPanel">
+        <Panel DockPanel.Dock="Bottom" Background="#466b8f">
+            <TextBlock Text="Версия 0.6" Foreground="White" Margin="10" FontWeight="Bold" />
+        </Panel>
 
-            <Button Content="Сохраненные миры" HorizontalAlignment="Stretch"
-                    Command="{Binding SelectView}"
-                    CommandParameter="saved"
-                    Background="White" />
+        <ItemsRepeater Items="{Binding NavItems}" Margin="10">
+            <ItemsRepeater.Layout>
+                <StackLayout Spacing="10" />
+            </ItemsRepeater.Layout>
 
-            <Button Content="Тест" HorizontalAlignment="Stretch"
-                    Command="{Binding SelectView}"
-                    CommandParameter="test"
-                    Background="White" />
-        </StackPanel>
-    </Panel>
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding Name}"
+                            Command="{Binding #NavPanel.DataContext.SelectView}"
+                            CommandParameter="{Binding Name}"
+                            Background="White"
+                            HorizontalAlignment="Stretch" />
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+    </DockPanel>
 </UserControl>
